@@ -12,4 +12,6 @@ export type User = {
   commentCount: number;
 };
 
-export type IntroUser = Pick<User, "userId" | "nickname" | "email" | "profilePath">;
+export type IntroUser = Pick<User, "userId" | "nickname" | "profilePath"> & {
+  email: string;
+};

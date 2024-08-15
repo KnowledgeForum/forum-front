@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import HomeSvg from "@assets/home.svg";
@@ -7,6 +7,9 @@ import BoardSvg from "@assets/board.svg";
 import FollowSvg from "@assets/follow.svg";
 import SearchSvg from "@assets/search.svg";
 import UserPlusSvg from "@assets/user-plus.svg";
+import AccountSvg from "@assets/profile.svg";
+import LogoutSvg from "@assets/logout.svg";
+import SettingSvg from "@assets/setting.svg";
 
 import { IntroUser } from "@/types/user";
 
@@ -14,16 +17,23 @@ import classes from "./DesktopHeader.module.scss";
 
 import Notification from "@/features/Notification/Notification";
 
+import Modal from "@/components/Modal/Modal";
+
+import useUser from "@/hooks/useUser";
+
 type DesktopHeaderProps = {
   user: IntroUser | null;
 };
 
 const DesktopHeader = ({ user }: DesktopHeaderProps) => {
+  const { logout } = useUser();
   const router = useLocation();
   const navigate = useNavigate();
 
+  const btnRef = useRef<HTMLButtonElement>(null);
+
   const [keyword, setKeyword] = useState<string>("");
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpenProfile, setIsOpenProfile] = useState<boolean>(false);
 
   const onSearch = useCallback(() => {
     navigate(`/search?keyword=${keyword}`);
@@ -46,9 +56,18 @@ const DesktopHeader = ({ user }: DesktopHeaderProps) => {
     onSearch();
   }, [onSearch]);
 
-  const handleNotification = useCallback(() => {
-    setIsOpen((prev) => !prev);
+  const handleProfile = useCallback(() => {
+    setIsOpenProfile((prev) => !prev);
   }, []);
+
+  const handleClose = useCallback(() => {
+    setIsOpenProfile(false);
+  }, []);
+
+  const handleLogout = useCallback(() => {
+    setIsOpenProfile(false);
+    logout();
+  }, [logout]);
 
   return (
     <header className={classes.header}>
@@ -91,18 +110,54 @@ const DesktopHeader = ({ user }: DesktopHeaderProps) => {
               <Link to="/post" className={classes.postBtn}>
                 글쓰기
               </Link>
-              <Notification isOpen={isOpen} onClick={handleNotification} />
-              <div className={classes.profile}>
+              <Notification />
+              <button className={classes.profile} ref={btnRef} onClick={handleProfile}>
                 <img src={user.profilePath} alt="유저 프로필 이미지" width={36} height={36} />
-              </div>
+              </button>
+              <Modal isOpen={isOpenProfile} btnRef={btnRef} onClose={handleClose}>
+                <div className={classes.profileModal}>
+                  <div className={classes.top}>
+                    <img
+                      src={user.profilePath}
+                      alt="유저 프로필 이미지"
+                      width={40}
+                      height={40}
+                      className={classes.profile}
+                    />
+                    <div className={classes.userInfo}>
+                      <div className={classes.username}>{user.nickname}</div>
+                      <div className={classes.email}>{user.email}</div>
+                    </div>
+                  </div>
+                  <div className={classes.linkBox}>
+                    <Link to={"/account"} className={classes.link}>
+                      <img src={AccountSvg} alt="계정 아이콘" />
+                      <span>내 정보</span>
+                    </Link>
+                    <button className={classes.link} onClick={handleLogout}>
+                      <img src={LogoutSvg} alt="로그아웃 아이콘" />
+                      <span>로그아웃</span>
+                    </button>
+                    <div className={classes.line} />
+                    <Link to={"/setting"} className={classes.link}>
+                      <img src={SettingSvg} alt="설정 아이콘" />
+                      <span>설정</span>
+                    </Link>
+                  </div>
+                </div>
+              </Modal>
             </>
           ) : (
             <>
-              <button className={classes.signupBtn}>
-                <img src={UserPlusSvg} alt="회원가입 아이콘" width={14} height={14} />
-                <span>회원가입</span>
-              </button>
-              <button className={classes.loginBtn}>로그인</button>
+              <Link to="/register">
+                <button className={classes.signupBtn}>
+                  <img src={UserPlusSvg} alt="회원가입 아이콘" width={14} height={14} />
+                  <span>회원가입</span>
+                </button>
+              </Link>
+              <Link to="/login">
+                <button className={classes.loginBtn}>로그인</button>
+              </Link>
             </>
           )}
         </div>

@@ -7,10 +7,14 @@
   min-height: 10rem;
   max-height: 30rem;
   padding: 1.25rem;
+  border-radius: $border-half-radius;
   background-color: $background-light-color;
   box-shadow: 0px 5px 12px 0px #000;
   font-size: 1rem;
   cursor: default;
+
+  scrollbar-width: thin;
+  scrollbar-color: #474d61 $background-color;
 
   // Scrollbar styling for WebKit browsers
   &::-webkit-scrollbar {
@@ -30,10 +34,6 @@
   &::-webkit-scrollbar-thumb:hover {
     background: $white-color;
   }
-
-  // Scrollbar styling for Firefox
-  scrollbar-width: thin;
-  scrollbar-color: #474d61 $background-color;
 }
 
 @include mobile {

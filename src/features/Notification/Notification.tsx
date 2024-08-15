@@ -12,17 +12,12 @@ import Modal from "@/components/Modal/Modal";
 import { NotificationTypeInfo } from "@/utils/constants";
 import { getTimeAgo } from "@/utils/timestamp";
 
-type NotificationProps = {
-  isOpen: boolean;
-  onClick: () => void;
-};
-
-const Notification = ({ isOpen, onClick }: NotificationProps) => {
+const Notification = () => {
   const [hasUnRead, setHasUnRead] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<Notifications | null>(null);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const btnRef = useRef<HTMLImageElement>(null);
-  const notificationRef = useRef<HTMLDivElement>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   const getNotificationMessage = useCallback((notification: Notification) => {
     switch (notification.notificationType) {
@@ -68,24 +63,15 @@ const Notification = ({ isOpen, onClick }: NotificationProps) => {
   }, []);
 
   const handleClick = useCallback(() => {
-    setHasUnRead(false);
     // TODO: 알림 읽음 처리 API 호출
+    setHasUnRead(false);
 
-    onClick();
-  }, [onClick]);
+    setIsOpen((prev) => !prev);
+  }, []);
 
-  const handleClickOutside = useCallback(
-    (event: MouseEvent) => {
-      if (btnRef.current && btnRef.current.contains(event.target as Node)) {
-        return;
-      }
-
-      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
-        onClick();
-      }
-    },
-    [onClick],
-  );
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
+  }, []);
 
   useEffect(() => {
     setNotifications({
@@ -177,19 +163,12 @@ const Notification = ({ isOpen, onClick }: NotificationProps) => {
     }
   }, [notifications]);
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [handleClickOutside]);
-
   return (
-    <div className={classes.notificationBtn} onClick={handleClick} ref={btnRef}>
+    <button className={classes.notificationBtn} onClick={handleClick} ref={btnRef}>
       <img src={BellIcon} alt="알림 아이콘" width={20} height={20} />
       {hasUnRead && <div className={classes.unread} />}
       {isOpen && (
-        <Modal className={classes.modal} ref={notificationRef}>
+        <Modal className={classes.modal} isOpen={isOpen} btnRef={btnRef} onClose={handleClose}>
           <div className={classes.title}>알림</div>
           <div className={classes.container}>
             {!notifications || notifications?.total <= 0 ? (
@@ -211,7 +190,7 @@ const Notification = ({ isOpen, onClick }: NotificationProps) => {
           </div>
         </Modal>
       )}
-    </div>
+    </button>
   );
 };
 
