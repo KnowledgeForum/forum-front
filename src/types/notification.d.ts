@@ -19,3 +19,7 @@ export type Notifications = {
 
 export type NotificationTypeName = keyof typeof NotificationTypeInfo;
 export type NotificationTypeValue = (typeof NotificationTypeInfo)[NotificationTypeName];
+
+export type NotificationFollowUnRead = {
+  unReadCount: number;
+};

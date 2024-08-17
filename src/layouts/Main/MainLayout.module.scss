@@ -1,4 +1,30 @@
 .layout {
+  display: flex;
+  gap: 1.25rem;
   max-width: $center-width;
   margin: 1.125rem auto 4rem;
+
+  .main {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+  }
+
+  .left,
+  .right {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+}
+
+@include main-layout-breakpoint {
+  .layout {
+    flex-direction: column;
+    margin: 0.625rem 0.9375rem;
+  }
 }

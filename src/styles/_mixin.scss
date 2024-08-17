@@ -30,8 +30,20 @@
   }
 }
 
+@mixin without-desktop {
+  @media (max-width: $breakpoint-tablet) {
+    @content;
+  }
+}
+
 @mixin desktop {
   @media (min-width: $breakpoint-desktop) {
+    @content;
+  }
+}
+
+@mixin main-layout-breakpoint {
+  @media (max-width: 1255px) {
     @content;
   }
 }

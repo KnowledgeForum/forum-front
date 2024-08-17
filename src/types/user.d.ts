@@ -15,3 +15,5 @@ export type User = {
 export type IntroUser = Pick<User, "userId" | "nickname" | "profilePath"> & {
   email: string;
 };
+
+export type Uploader = Pick<User, "userId" | "nickname" | "profilePath">;
