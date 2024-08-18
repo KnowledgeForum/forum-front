@@ -1,24 +1,26 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Box, Skeleton } from "@mui/material";
 
-import { BoardListWithType } from "@/types/board";
+import { BoardListWithType, BoardWithType } from "@/types/board";
 
 import Bitcoin from "@/assets/bitcoin.png";
+
 import BoardItem from "@/components/BoardItem/BoardItem";
+
 import useInfinityScroll from "@/hooks/useInfinityScroll";
 
 const Main = () => {
+  const count = 5;
+
+  const [total, setTotal] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [recentBoards, setRecentBoards] = useState<BoardWithType[] | null>(null);
+
   const endRef = useRef<HTMLDivElement>(null);
 
-  useInfinityScroll(endRef, () => {
+  const fetchRecentBoards = useCallback(async () => {
     // TODO: 최근 뉴스 또는 게시글 목록을 불러오는 API 호출
-    console.log("infinity scroll");
-  });
-
-  const [recentBoards, setRecentBoards] = useState<BoardListWithType | null>(null);
-
-  useEffect(() => {
-    // TODO: 최근 뉴스 또는 게시글 목록을 불러오는 API 호출
-    setRecentBoards({
+    const recentBoards: BoardListWithType = {
       boards: [
         {
           boardId: 1,
@@ -107,18 +109,59 @@ const Main = () => {
         },
       ],
       total: 5,
-    });
+    };
+
+    setRecentBoards(recentBoards.boards);
+    setTotal(recentBoards.total);
+
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
   }, []);
+
+  useEffect(() => {
+    fetchRecentBoards();
+  }, [fetchRecentBoards]);
+
+  useInfinityScroll(endRef, () => {
+    if (isLoading) return;
+    if (recentBoards && recentBoards.length >= total) return;
+
+    // TODO: 최근 뉴스 또는 게시글 목록을 불러오는 API 호출
+    console.log("infinity scroll");
+  });
 
   return (
     <>
-      <>
-        {recentBoards &&
-          recentBoards.total > 0 &&
-          recentBoards.boards.map((board) => (
-            <BoardItem key={board.boardId} board={board} to={`/board/${board.boardId}`} />
-          ))}
-      </>
+      {!isLoading ? (
+        <>
+          {recentBoards &&
+            total > 0 &&
+            recentBoards.map((board) => <BoardItem key={board.boardId} board={board} to={`/board/${board.boardId}`} />)}
+        </>
+      ) : (
+        <Box width={"100%"} display={"flex"} flexDirection={"column"} gap={"1.25rem"}>
+          {Array(count)
+            .fill(0)
+            .map((_, index) => (
+              <Box
+                key={index}
+                display={"flex"}
+                gap={"1.25rem"}
+                padding={"1.25rem"}
+                borderRadius={"16px"}
+                bgcolor={"#262d34"}
+              >
+                <Skeleton variant="rectangular" width={156} height={156} />
+                <Box width={"100%"}>
+                  <Skeleton variant="text" width={"100%"} height={60} />
+                  <Skeleton variant="text" width={"100%"} height={30} />
+                  <Skeleton variant="text" width={"100%"} height={30} />
+                </Box>
+              </Box>
+            ))}
+        </Box>
+      )}
       <div ref={endRef} />
     </>
   );

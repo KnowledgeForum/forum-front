@@ -1,7 +1,6 @@
 .ul {
   display: flex;
   flex-direction: column;
-  max-width: 325px;
   gap: 1.25rem;
   padding: 0 0.625rem;
 
@@ -28,11 +27,5 @@
       font-size: 0.75rem;
       color: #97989d;
     }
-  }
-}
-
-@include main-layout-breakpoint {
-  .ul {
-    max-width: none;
   }
 }

@@ -24,8 +24,8 @@ const Link = ({ data, color, unReadCount }: LinkProps) => {
         <img src={data.icon} alt={`${data.title} 아이콘`} width={28} height={28} />
       </div>
       <div className={classes.info}>
-        <span className={classes.title}>{data.title}</span>
-        <span className={classes.description}>{data.description}</span>
+        <p className={classes.title}>{data.title}</p>
+        <p className={classes.description}>{data.description}</p>
         {unReadCount && unReadCount > 0 ? <span className={classes.badge}>{unReadCount}</span> : null}
       </div>
     </RouterLink>

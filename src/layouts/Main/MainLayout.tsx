@@ -1,7 +1,8 @@
 import { Outlet } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { TagPopular } from "@/types/tag";
+import { IntroBoardList } from "@/types/board";
 
 import Desktopheader from "@/components/Header/DesktopHeader/DesktopHeader";
 import Mobileheader from "@/components/Header/MobileHeader/MobileHeader";
@@ -13,7 +14,6 @@ import classes from "./MainLayout.module.scss";
 
 import useWindowSize from "@/hooks/useWindowSize";
 import useUser from "@/hooks/useUser";
-import { IntroBoardList } from "@/types/board";
 
 const MainLayout = () => {
   const tabeltSize = 992;
@@ -21,12 +21,16 @@ const MainLayout = () => {
   const { width } = useWindowSize();
   const { user } = useUser();
 
+  const [isLoadingTags, setIsLoadingTags] = useState<boolean>(true);
+  const [isLoadingRecommendBoards, setIsLoadingRecommendBoards] = useState<boolean>(true);
+  const [isLoadingPopularBoards, setIsLoadingPopularBoards] = useState<boolean>(true);
+
   const [unReadCount, setUnReadCount] = useState<number>(0);
   const [tags, setTags] = useState<TagPopular[]>([]);
   const [recommendBoards, setRecommendBoards] = useState<IntroBoardList | null>();
   const [popularBoards, setPopularBoards] = useState<IntroBoardList | null>();
 
-  useEffect(() => {
+  const getRecommendBoards = useCallback(() => {
     // TODO: 추천 게시글 목록을 가져오는 API 호출
     setRecommendBoards({
       boards: [
@@ -68,9 +72,13 @@ const MainLayout = () => {
         },
       ],
     });
+
+    setTimeout(() => {
+      setIsLoadingRecommendBoards(false);
+    }, 1000);
   }, []);
 
-  useEffect(() => {
+  const getPopularBoards = useCallback(() => {
     // TODO: 인기 게시글 목록을 가져오는 API 호출
     setPopularBoards({
       boards: [
@@ -112,9 +120,13 @@ const MainLayout = () => {
         },
       ],
     });
+
+    setTimeout(() => {
+      setIsLoadingPopularBoards(false);
+    }, 1000);
   }, []);
 
-  useEffect(() => {
+  const getPopularTags = useCallback(() => {
     // TODO: 인기 태그 목록을 가져오는 API 호출
     const tags: TagPopular[] = [
       {
@@ -150,7 +162,16 @@ const MainLayout = () => {
     ];
 
     setTags(tags);
+    setTimeout(() => {
+      setIsLoadingTags(false);
+    }, 1000);
   }, []);
+
+  useEffect(() => {
+    getPopularTags();
+    getRecommendBoards();
+    getPopularBoards();
+  }, [getPopularBoards, getPopularTags, getRecommendBoards]);
 
   useEffect(() => {
     // TODO: 팔로우 뉴스 알림 개수를 가져오는 API 호출
@@ -163,14 +184,14 @@ const MainLayout = () => {
       <div className={classes.layout}>
         <div className={classes.left}>
           <NewsNavigation unReadCount={unReadCount} />
-          <TagNavigation tags={tags} />
+          <TagNavigation tags={tags} isLoading={isLoadingTags} />
         </div>
         <main className={classes.main}>
           <Outlet />
         </main>
         <div className={classes.right}>
-          {recommendBoards && <BoardNavigation title="추천 뉴스" boards={recommendBoards.boards} />}
-          {popularBoards && <BoardNavigation title="인기 게시글" boards={popularBoards.boards} />}
+          <BoardNavigation title="추천 뉴스" boards={recommendBoards?.boards} isLoading={isLoadingRecommendBoards} />
+          <BoardNavigation title="인기 게시글" boards={popularBoards?.boards} isLoading={isLoadingPopularBoards} />
         </div>
       </div>
     </>

@@ -15,7 +15,6 @@ const useInfinityScroll = (endRef: RefObject<HTMLElement>, callback: () => void)
         (entry) => {
           if (entry.isIntersecting) {
             callback();
-            return;
           }
         },
         { threshold: 0.1, root: endTarget },

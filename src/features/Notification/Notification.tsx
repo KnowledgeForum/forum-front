@@ -11,13 +11,19 @@ import Modal from "@/components/Modal/Modal";
 
 import { NotificationTypeInfo } from "@/utils/constants";
 import { getTimeAgo } from "@/utils/timestamp";
+import useInfinityScroll from "@/hooks/useInfinityScroll";
+import { Box, Skeleton } from "@mui/material";
 
 const Notification = () => {
+  const page = 5;
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasUnRead, setHasUnRead] = useState<boolean>(false);
-  const [notifications, setNotifications] = useState<Notifications | null>(null);
+  const [notifications, setNotifications] = useState<Notification[] | null>(null);
+  const [total, setTotal] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const btnRef = useRef<HTMLButtonElement>(null);
+  const infinityRef = useRef<HTMLDivElement>(null);
 
   const getNotificationMessage = useCallback((notification: Notification) => {
     switch (notification.notificationType) {
@@ -62,19 +68,8 @@ const Notification = () => {
     }
   }, []);
 
-  const handleClick = useCallback(() => {
-    // TODO: 알림 읽음 처리 API 호출
-    setHasUnRead(false);
-
-    setIsOpen((prev) => !prev);
-  }, []);
-
-  const handleClose = useCallback(() => {
-    setIsOpen(false);
-  }, []);
-
-  useEffect(() => {
-    setNotifications({
+  const getNotifications = useCallback(() => {
+    const notifications: Notifications = {
       notifications: [
         {
           notificationId: 1,
@@ -153,12 +148,41 @@ const Notification = () => {
         },
       ],
       total: 3,
-    });
+    };
+
+    setNotifications(notifications.notifications);
+    setTotal(notifications.total);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }, []);
+
+  const handleClick = useCallback(() => {
+    // TODO: 알림 읽음 처리 API 호출
+    setHasUnRead(false);
+
+    setIsOpen((prev) => !prev);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
   }, []);
 
   useEffect(() => {
+    getNotifications();
+  }, [getNotifications]);
+
+  useInfinityScroll(infinityRef, () => {
+    if (isLoading) return;
+    else if (notifications && notifications.length >= total) return;
+
+    // TODO: 알림 목록 추가 불러오는 API 호출
+    console.log("infinity scroll");
+  });
+
+  useEffect(() => {
     if (notifications) {
-      const unreadNotifications = notifications.notifications.filter((notification) => !notification.isRead);
+      const unreadNotifications = notifications.filter((notification) => !notification.isRead);
       return setHasUnRead(unreadNotifications.length > 0);
     }
   }, [notifications]);
@@ -170,24 +194,48 @@ const Notification = () => {
       {isOpen && (
         <Modal className={classes.modal} isOpen={isOpen} btnRef={btnRef} onClose={handleClose}>
           <div className={classes.title}>알림</div>
-          <div className={classes.container}>
-            {!notifications || notifications?.total <= 0 ? (
-              <div className={classes.empty}>새로운 알림이 없습니다.</div>
-            ) : (
-              notifications?.notifications.map((notification) => (
-                <Link to={`/board/${notification.board.boardId}`} key={notification.notificationId}>
-                  <div className={classes.top}>
-                    <img src={notification.sender.profilePath} alt="프로필 이미지" width={36} height={36} />
-                    <div className={classes.info}>
-                      <div className={classes.username}>{notification.sender.username}</div>
-                      <div className={classes.time}>{getTimeAgo(notification.createdTime)}</div>
-                    </div>
-                  </div>
-                  <div className={classes.text}>{getNotificationMessage(notification)}</div>
-                </Link>
-              ))
-            )}
-          </div>
+          {isLoading ? (
+            <Box display={"flex"} flexDirection={"column"} gap={"10px"}>
+              {Array(page)
+                .fill(0)
+                .map((_, index) => (
+                  <Box>
+                    <Box display={"flex"} alignItems={"center"} key={index}>
+                      <Box marginRight={"5px"}>
+                        <Skeleton variant="circular" width={36} height={36} />
+                      </Box>
+                      <Box>
+                        <Skeleton variant="text" width={"80px"} />
+                        <Skeleton variant="text" width={"80px"} />
+                      </Box>
+                    </Box>
+                    <Skeleton variant="text" width={"100%"} />
+                  </Box>
+                ))}
+            </Box>
+          ) : (
+            <>
+              <div className={classes.container}>
+                {!notifications || total <= 0 ? (
+                  <div className={classes.empty}>새로운 알림이 없습니다.</div>
+                ) : (
+                  notifications.map((notification) => (
+                    <Link to={`/board/${notification.board.boardId}`} key={notification.notificationId}>
+                      <div className={classes.top}>
+                        <img src={notification.sender.profilePath} alt="프로필 이미지" width={36} height={36} />
+                        <div className={classes.info}>
+                          <div className={classes.username}>{notification.sender.username}</div>
+                          <div className={classes.time}>{getTimeAgo(notification.createdTime)}</div>
+                        </div>
+                      </div>
+                      <div className={classes.text}>{getNotificationMessage(notification)}</div>
+                    </Link>
+                  ))
+                )}
+              </div>
+              <div ref={infinityRef} />
+            </>
+          )}
         </Modal>
       )}
     </button>

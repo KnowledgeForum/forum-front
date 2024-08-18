@@ -20,11 +20,28 @@
     flex-direction: column;
     gap: 1.25rem;
   }
+
+  .left {
+    width: 17.2188rem;
+  }
+  .right {
+    width: 20.3125rem;
+  }
 }
 
 @include main-layout-breakpoint {
   .layout {
     flex-direction: column;
     margin: 0.625rem 0.9375rem;
+
+    .main {
+      order: 2;
+    }
+
+    .left,
+    .right {
+      order: 1;
+      width: 100%;
+    }
   }
 }
