@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { Box, Skeleton } from "@mui/material";
 
 import BellIcon from "@assets/bell.svg";
 
@@ -11,8 +12,8 @@ import Modal from "@/components/Modal/Modal";
 
 import { NotificationTypeInfo } from "@/utils/constants";
 import { getTimeAgo } from "@/utils/timestamp";
+
 import useInfinityScroll from "@/hooks/useInfinityScroll";
-import { Box, Skeleton } from "@mui/material";
 
 const Notification = () => {
   const page = 5;
@@ -195,18 +196,18 @@ const Notification = () => {
         <Modal className={classes.modal} isOpen={isOpen} btnRef={btnRef} onClose={handleClose}>
           <div className={classes.title}>알림</div>
           {isLoading ? (
-            <Box display={"flex"} flexDirection={"column"} gap={"10px"}>
+            <Box display={"flex"} flexDirection={"column"} gap={"0.625rem"}>
               {Array(page)
                 .fill(0)
                 .map((_, index) => (
                   <Box>
                     <Box display={"flex"} alignItems={"center"} key={index}>
-                      <Box marginRight={"5px"}>
-                        <Skeleton variant="circular" width={36} height={36} />
+                      <Box marginRight={"0.3125rem"}>
+                        <Skeleton variant="circular" width={"2.25rem"} height={"2.25rem"} />
                       </Box>
                       <Box>
-                        <Skeleton variant="text" width={"80px"} />
-                        <Skeleton variant="text" width={"80px"} />
+                        <Skeleton variant="text" width={"5rem"} />
+                        <Skeleton variant="text" width={"5rem"} />
                       </Box>
                     </Box>
                     <Skeleton variant="text" width={"100%"} />

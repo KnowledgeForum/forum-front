@@ -22,9 +22,9 @@ const BoardNavigation = ({ title, boards, isLoading }: BoardNavigationProps) => 
           ? Array(6)
               .fill(0)
               .map((_, index) => (
-                <Box display={"flex"} alignItems={"center"} gap={"10px"} key={index}>
+                <Box display={"flex"} alignItems={"center"} gap={"0.625rem"} key={index}>
                   <Box>
-                    <Skeleton variant="rounded" width={58} height={58} />
+                    <Skeleton variant="rounded" width={"3.625rem"} height={"3.625rem"} />
                   </Box>
                   <Box width={"100%"}>
                     <Skeleton variant="text" width={"100%"} />
