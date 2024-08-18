@@ -152,7 +152,7 @@ const Main = () => {
                 borderRadius={"16px"}
                 bgcolor={"#262d34"}
               >
-                <Skeleton variant="rectangular" width={156} height={156} />
+                <Skeleton variant="rounded" width={200} height={140} style={{ borderRadius: 8 }} />
                 <Box width={"100%"}>
                   <Skeleton variant="text" width={"100%"} height={60} />
                   <Skeleton variant="text" width={"100%"} height={30} />
