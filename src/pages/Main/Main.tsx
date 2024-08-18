@@ -1,11 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { BoardListWithType } from "@/types/board";
 
 import Bitcoin from "@/assets/bitcoin.png";
 import BoardItem from "@/components/BoardItem/BoardItem";
+import useInfinityScroll from "@/hooks/useInfinityScroll";
 
 const Main = () => {
+  const endRef = useRef<HTMLDivElement>(null);
+
+  useInfinityScroll(endRef, () => {
+    // TODO: 최근 뉴스 또는 게시글 목록을 불러오는 API 호출
+    console.log("infinity scroll");
+  });
+
   const [recentBoards, setRecentBoards] = useState<BoardListWithType | null>(null);
 
   useEffect(() => {
@@ -104,11 +112,14 @@ const Main = () => {
 
   return (
     <>
-      {recentBoards &&
-        recentBoards.total > 0 &&
-        recentBoards.boards.map((board) => (
-          <BoardItem key={board.boardId} board={board} to={`/board/${board.boardId}`} />
-        ))}
+      <>
+        {recentBoards &&
+          recentBoards.total > 0 &&
+          recentBoards.boards.map((board) => (
+            <BoardItem key={board.boardId} board={board} to={`/board/${board.boardId}`} />
+          ))}
+      </>
+      <div ref={endRef} />
     </>
   );
 };

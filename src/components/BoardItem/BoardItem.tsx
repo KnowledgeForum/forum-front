@@ -7,12 +7,11 @@ import classes from "./BoardItem.module.scss";
 
 import BoardIcon from "@/assets/type-board.svg";
 import NewsIcon from "@/assets/type-news.svg";
-import LikeActiveIcon from "@assets/like-active.svg";
-import LikeNoneIcon from "@assets/like-none.svg";
 
 import { getIncludeComma, getTimeAgo } from "@/utils/timestamp";
 
 import TagSlider from "../TagSlider/TagSlider";
+import LikeButton from "@/features/LikeButton/LikeButton";
 
 type BoardItemProps = {
   board: BoardWithType;
@@ -45,13 +44,7 @@ const BoardItem = ({ board, to }: BoardItemProps) => {
                 <img src={BoardIcon} alt="게시글 아이콘" width={20} height={20} />
               )}
             </div>
-            <button className={classes.like}>
-              {board.isLike ? (
-                <img src={LikeActiveIcon} alt="좋아요 아이콘" width={20} height={20} />
-              ) : (
-                <img src={LikeNoneIcon} alt="좋아요 아이콘" width={20} height={20} />
-              )}
-            </button>
+            <LikeButton boardId={board.boardId} isLikeProp={board.isLike} />
           </div>
         </div>
         <TagSlider tags={board.tags} />
