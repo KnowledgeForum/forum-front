@@ -1,7 +1,3 @@
-/**
- * hooks 폴더는 많은 곳에서 사용하는 특정 기능을 모아놓은 폴더입니다.
- */
-
 import { useState, useEffect } from "react";
 
 const useWindowSize = () => {
