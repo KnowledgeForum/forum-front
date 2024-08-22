@@ -2,12 +2,12 @@ import { BoardApi } from "@/api/board";
 
 import InfinityScrollBoard from "@/features/InfinityScrollBoard/InfinityScrollBoard";
 
-const News = () => {
+const Board = () => {
   const count = 5;
 
   return (
-    <InfinityScrollBoard queryKey={["recentBoards", count]} fetchFunction={BoardApi.fetchRecentNews} count={count} />
+    <InfinityScrollBoard queryKey={["recentBoards", count]} fetchFunction={BoardApi.fetchRecentBoards} count={count} />
   );
 };
 
-export default News;
+export default Board;

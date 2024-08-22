@@ -1,6 +1,6 @@
 import { Box, Skeleton } from "@mui/material";
 
-import { TagPopular } from "@/types/tag";
+import { TagPopular, TagWithCount } from "@/types/tag";
 
 import AsideLayout from "@/layouts/Aside/AsideLayout";
 
@@ -9,7 +9,7 @@ import Link from "@/components/SubNavigation/Link/Link";
 import { getTagTheme } from "@/utils/tag";
 
 type TagNavigationProps = {
-  tags: TagPopular[];
+  tags?: TagPopular;
   isLoading: boolean;
 };
 
@@ -33,7 +33,7 @@ const TagNavigation = ({ tags, isLoading }: TagNavigationProps) => {
       ) : (
         <nav>
           <ul>
-            {tags.map((tag: TagPopular) => {
+            {tags?.tags.map((tag: TagWithCount) => {
               const theme = getTagTheme(tag);
 
               return (

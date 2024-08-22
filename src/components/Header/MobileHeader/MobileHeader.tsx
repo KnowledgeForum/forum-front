@@ -7,27 +7,19 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import classes from "./MobileHeader.module.scss";
 
-import { IntroUser } from "@/types/user";
-
 import Notification from "@/features/Notification/Notification";
 
-type MobileheaderProps = {
-  user: IntroUser | null;
-};
+import useUser from "@/hooks/useUser";
 
-const Mobileheader = ({ user }: MobileheaderProps) => {
+const Mobileheader = () => {
   const iOS = typeof navigator !== "undefined" && /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const { user } = useUser();
   const router = useLocation();
 
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  const [isOpenNotification, setIsOpenNotification] = useState<boolean>(false);
 
   const handleCloseMenu = useCallback(() => {
     setIsOpenMenu(false);
-  }, []);
-
-  const handleNotification = useCallback(() => {
-    setIsOpenNotification((prev) => !prev);
   }, []);
 
   useEffect(() => {
@@ -46,7 +38,7 @@ const Mobileheader = ({ user }: MobileheaderProps) => {
             <Link to="/post" className={classes.postBtn}>
               글쓰기
             </Link>
-            <Notification isOpen={isOpenNotification} onClick={handleNotification} />
+            <Notification />
           </div>
         )}
         <MenuIcon width={32} height={32} onClick={() => setIsOpenMenu(true)} />
