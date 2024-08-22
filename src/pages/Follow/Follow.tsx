@@ -2,16 +2,16 @@ import { BoardApi } from "@/api/board";
 
 import InfinityScrollBoard from "@/features/InfinityScrollBoard/InfinityScrollBoard";
 
-const Main = () => {
+const Follow = () => {
   const count = 5;
 
   return (
     <InfinityScrollBoard
       queryKey={["recentBoards", count]}
-      fetchFunction={BoardApi.fetchRecentBoardAndNews}
+      fetchFunction={BoardApi.fetchRecentFollowingBoards}
       count={count}
     />
   );
 };
 
-export default Main;
+export default Follow;

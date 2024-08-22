@@ -3,6 +3,10 @@ export type Tag = {
   tagName: string;
 };
 
-export type TagPopular = {
+export type TagWithCount = {
   tagCount: number;
 } & Tag;
+
+export type TagPopular = {
+  tags: TagWithCount[];
+};

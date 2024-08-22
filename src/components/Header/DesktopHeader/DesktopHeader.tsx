@@ -11,8 +11,6 @@ import AccountSvg from "@assets/profile.svg";
 import LogoutSvg from "@assets/logout.svg";
 import SettingSvg from "@assets/setting.svg";
 
-import { IntroUser } from "@/types/user";
-
 import classes from "./DesktopHeader.module.scss";
 
 import Notification from "@/features/Notification/Notification";
@@ -21,12 +19,8 @@ import Modal from "@/components/Modal/Modal";
 
 import useUser from "@/hooks/useUser";
 
-type DesktopHeaderProps = {
-  user: IntroUser | null;
-};
-
-const DesktopHeader = ({ user }: DesktopHeaderProps) => {
-  const { logout } = useUser();
+const DesktopHeader = () => {
+  const { user, logout } = useUser();
   const router = useLocation();
   const navigate = useNavigate();
 
@@ -36,7 +30,7 @@ const DesktopHeader = ({ user }: DesktopHeaderProps) => {
   const [isOpenProfile, setIsOpenProfile] = useState<boolean>(false);
 
   const onSearch = useCallback(() => {
-    navigate(`/search?keyword=${keyword}`);
+    navigate(`/search?keyword=${keyword}`, { preventScrollReset: false });
   }, [keyword, navigate]);
 
   const handleChangeKeyword = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {

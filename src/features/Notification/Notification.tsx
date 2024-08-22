@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Box, Skeleton } from "@mui/material";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 import BellIcon from "@assets/bell.svg";
 
@@ -8,19 +9,37 @@ import classes from "./Notification.module.scss";
 
 import type { Notification, Notifications } from "@/types/notification";
 
+import { NotificationApi } from "@/api/notification";
+
+import useInfinityScroll from "@/hooks/useInfinityScroll";
+
 import Modal from "@/components/Modal/Modal";
 
 import { NotificationTypeInfo } from "@/utils/constants";
 import { getTimeAgo } from "@/utils/timestamp";
-
-import useInfinityScroll from "@/hooks/useInfinityScroll";
+import { getNextPagination } from "@/utils/pagination";
 
 const Notification = () => {
-  const page = 5;
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const count = 5;
+
+  const { data, isLoading, isFetching, hasNextPage, fetchNextPage } = useInfiniteQuery<Notifications>({
+    queryKey: ["notifications", count],
+    initialData: undefined,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages, lastPageParam) => {
+      return getNextPagination({
+        itemLength: allPages.length,
+        count,
+        total: lastPage.total,
+        page: lastPageParam as number,
+      });
+    },
+    queryFn: async ({ pageParam: page = 1 }) => {
+      return await NotificationApi.getNotifications({ page: page as number, count });
+    },
+  });
+
   const [hasUnRead, setHasUnRead] = useState<boolean>(false);
-  const [notifications, setNotifications] = useState<Notification[] | null>(null);
-  const [total, setTotal] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const btnRef = useRef<HTMLButtonElement>(null);
@@ -69,95 +88,6 @@ const Notification = () => {
     }
   }, []);
 
-  const getNotifications = useCallback(() => {
-    const notifications: Notifications = {
-      notifications: [
-        {
-          notificationId: 1,
-          notificationType: "1001",
-          sender: {
-            userId: 1,
-            username: "user1",
-            profilePath: "https://avatars.githubusercontent.com/u/1",
-          },
-          board: {
-            boardId: 1,
-            title: "공지사항 제목 1",
-          },
-          isRead: false,
-          createdTime: "2024-08-14 10:52:00",
-        },
-        {
-          notificationId: 2,
-          notificationType: "1002",
-          sender: {
-            userId: 2,
-            username: "user2",
-            profilePath: "https://avatars.githubusercontent.com/u/1",
-          },
-          board: {
-            boardId: 2,
-            title: "비트코인 지금 사야할 때인가? 가장 중요한 지표 알려드리겠습니다.",
-          },
-          isRead: false,
-          createdTime: "2024-07-03 10:52:00",
-        },
-        {
-          notificationId: 3,
-          notificationType: "1003",
-          sender: {
-            userId: 3,
-            username: "user3",
-            profilePath: "https://avatars.githubusercontent.com/u/1",
-          },
-          board: {
-            boardId: 3,
-            title: "개발자의 필수 역량",
-          },
-          isRead: true,
-          createdTime: "2023-08-14 10:52:00",
-        },
-        {
-          notificationId: 4,
-          notificationType: "1004",
-          sender: {
-            userId: 4,
-            username: "user4",
-            profilePath: "https://avatars.githubusercontent.com/u/1",
-          },
-          board: {
-            boardId: 4,
-            title: "개발자의 필수 역량",
-          },
-          isRead: true,
-          createdTime: "2023-08-14 10:52:00",
-        },
-        {
-          notificationId: 5,
-          notificationType: "1005",
-          sender: {
-            userId: 5,
-            username: "user5",
-            profilePath: "https://avatars.githubusercontent.com/u/1",
-          },
-          board: {
-            boardId: 5,
-            title: "개발자의 필수 역량",
-          },
-          isRead: true,
-          createdTime: "2023-08-14 10:52:00",
-        },
-      ],
-      total: 3,
-    };
-
-    setNotifications(notifications.notifications);
-    setTotal(notifications.total);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-  }, []);
-
   const handleClick = useCallback(() => {
     // TODO: 알림 읽음 처리 API 호출
     setHasUnRead(false);
@@ -169,24 +99,19 @@ const Notification = () => {
     setIsOpen(false);
   }, []);
 
-  useEffect(() => {
-    getNotifications();
-  }, [getNotifications]);
-
   useInfinityScroll(infinityRef, () => {
-    if (isLoading) return;
-    else if (notifications && notifications.length >= total) return;
+    if (isLoading || isFetching || !hasNextPage) return;
 
-    // TODO: 알림 목록 추가 불러오는 API 호출
-    console.log("infinity scroll");
+    fetchNextPage();
   });
 
   useEffect(() => {
-    if (notifications) {
+    if (data?.pages) {
+      const notifications = data.pages.flatMap((page) => page.notifications);
       const unreadNotifications = notifications.filter((notification) => !notification.isRead);
       return setHasUnRead(unreadNotifications.length > 0);
     }
-  }, [notifications]);
+  }, [data]);
 
   return (
     <button className={classes.notificationBtn} onClick={handleClick} ref={btnRef}>
@@ -197,7 +122,7 @@ const Notification = () => {
           <div className={classes.title}>알림</div>
           {isLoading ? (
             <Box display={"flex"} flexDirection={"column"} gap={"0.625rem"}>
-              {Array(page)
+              {Array(count)
                 .fill(0)
                 .map((_, index) => (
                   <Box>
@@ -217,21 +142,27 @@ const Notification = () => {
           ) : (
             <>
               <div className={classes.container}>
-                {!notifications || total <= 0 ? (
+                {!data ? (
                   <div className={classes.empty}>새로운 알림이 없습니다.</div>
                 ) : (
-                  notifications.map((notification) => (
-                    <Link to={`/board/${notification.board.boardId}`} key={notification.notificationId}>
-                      <div className={classes.top}>
-                        <img src={notification.sender.profilePath} alt="프로필 이미지" width={36} height={36} />
-                        <div className={classes.info}>
-                          <div className={classes.username}>{notification.sender.username}</div>
-                          <div className={classes.time}>{getTimeAgo(notification.createdTime)}</div>
-                        </div>
-                      </div>
-                      <div className={classes.text}>{getNotificationMessage(notification)}</div>
-                    </Link>
-                  ))
+                  data.pages.map((page) =>
+                    page.notifications.map((notification) => (
+                      <Link to={`/board/${notification.board.boardId}`} key={notification.notificationId}>
+                        <Box display={"flex"} alignItems={"center"} gap={"0.625rem"}>
+                          <Box>
+                            <img src={notification.sender.profilePath} alt="프로필 이미지" width={40} height={40} />
+                          </Box>
+                          <Box>
+                            <Box display={"flex"} alignItems={"center"} gap={"0.625rem"}>
+                              <strong>{notification.sender.username}</strong>
+                              <span>{getTimeAgo(notification.createdTime)}</span>
+                            </Box>
+                            {getNotificationMessage(notification)}
+                          </Box>
+                        </Box>
+                      </Link>
+                    )),
+                  )
                 )}
               </div>
               <div ref={infinityRef} />
