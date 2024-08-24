@@ -6,3 +6,12 @@ export const NotificationTypeInfo = {
   RECOMMEND: "1005",
   EVENT: "1006",
 } as const;
+
+export const SnsKindEnum = {
+  KAKAO: "1001",
+  NAVER: "1002",
+  GOOGLE: "1003",
+  GITHUB: "1004",
+} as const;
+
+export type SnsKind = (typeof SnsKindEnum)[keyof typeof SnsKindEnum];

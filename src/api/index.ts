@@ -1,2 +1,4 @@
 export const API_URL =
-  import.meta.env.ENVIROMENT === "production" ? import.meta.env.API_URL_PRODUCT : import.meta.env.API_URL_DEVELOPMENT;
+  import.meta.env.VITE_ENVIRONMENT === "production"
+    ? import.meta.env.VITE_API_URL_PRODUCT
+    : import.meta.env.VITE_API_URL_DEVELOPMENT;
