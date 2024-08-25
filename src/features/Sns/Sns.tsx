@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { MouseEvent, useCallback, useEffect, useMemo } from "react";
+import { useLocation } from "react-router-dom";
 
 import classes from "./Sns.module.scss";
 
@@ -8,16 +9,11 @@ import NaverIcon from "@/assets/naver.svg";
 import GoogleIcon from "@/assets/google.svg";
 import GithubIcon from "@/assets/github.svg";
 
-import { SnsKind, SnsKindEnum } from "@/utils/constants";
-
 import useToast from "@/hooks/useToast";
-import { useLocation } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
-import { successRedirectState, failedRedirectState } from "@/recoil/redirect/atoms";
+
+import { SessionStorageKey, SnsKind, SnsKindEnum } from "@/utils/constants";
 
 const Sns = () => {
-  const setSuccessRedirectUri = useSetRecoilState(successRedirectState);
-  const setFailedRedirectState = useSetRecoilState(failedRedirectState);
   const { ToastElement, showToast } = useToast();
 
   const kakaoJavascriptKey: string = useMemo(() => import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY, []);
@@ -43,13 +39,13 @@ const Sns = () => {
       return;
     }
 
-    setFailedRedirectState(location.pathname);
+    sessionStorage.setItem(SessionStorageKey.FAILED_REDIRECT_STATE, location.pathname);
 
     kakao?.Auth?.authorize({
       redirectUri: kakaoRedirectUri,
       state: kakaoState,
     });
-  }, [kakaoRedirectUri, kakaoState, location.pathname, showToast, setFailedRedirectState]);
+  }, [kakaoRedirectUri, kakaoState, location.pathname, showToast]);
 
   const handleNaver = useCallback(() => {
     if (!naverClientId || !naverRedirectUri || !naverState) {
@@ -57,7 +53,7 @@ const Sns = () => {
       return;
     }
 
-    setFailedRedirectState(location.pathname);
+    sessionStorage.setItem(SessionStorageKey.FAILED_REDIRECT_STATE, location.pathname);
 
     const baseUrl = "https://nid.naver.com/oauth2.0/authorize";
     const config = {
@@ -70,7 +66,7 @@ const Sns = () => {
     const naverUrl = `${baseUrl}?${params.toString()}`;
 
     window.location.href = naverUrl;
-  }, [location.pathname, naverClientId, naverRedirectUri, naverState, showToast, setFailedRedirectState]);
+  }, [location.pathname, naverClientId, naverRedirectUri, naverState, showToast]);
 
   const handleGoogle = useCallback(() => {
     if (!googleClientId) {
@@ -78,7 +74,7 @@ const Sns = () => {
       return;
     }
 
-    setFailedRedirectState(location.pathname);
+    sessionStorage.setItem(SessionStorageKey.FAILED_REDIRECT_STATE, location.pathname);
 
     const baseUrl = "https://accounts.google.com/o/oauth2/auth";
     const config = {
@@ -91,7 +87,7 @@ const Sns = () => {
     const googleUrl = `${baseUrl}?${params.toString()}`;
 
     window.location.href = googleUrl;
-  }, [googleClientId, googleRedirectUri, location.pathname, showToast, setFailedRedirectState]);
+  }, [googleClientId, googleRedirectUri, location.pathname, showToast]);
 
   const handleGithub = useCallback(() => {
     if (!githubClientId) {
@@ -99,7 +95,7 @@ const Sns = () => {
       return;
     }
 
-    setFailedRedirectState(location.pathname);
+    sessionStorage.setItem(SessionStorageKey.FAILED_REDIRECT_STATE, location.pathname);
 
     const baseUrl = "https://github.com/login/oauth/authorize";
     const config = {
@@ -110,7 +106,7 @@ const Sns = () => {
     const githubUrl = `${baseUrl}?${params.toString()}`;
 
     window.location.href = githubUrl;
-  }, [githubClientId, location.pathname, showToast, setFailedRedirectState]);
+  }, [githubClientId, location.pathname, showToast]);
 
   const handleLogin = useCallback(
     (event: MouseEvent<HTMLButtonElement>, snsKind: SnsKind) => {
@@ -148,7 +144,8 @@ const Sns = () => {
     if (location.search) {
       const params = new URLSearchParams(location.search);
       if (params.get("redirect")) {
-        setSuccessRedirectUri(params.get("redirect") as string);
+        console.log(params.get("redirect"));
+        sessionStorage.setItem(SessionStorageKey.SUCCESS_REDIRECT_STATE, params.get("redirect") as string);
       }
     }
 
@@ -156,7 +153,7 @@ const Sns = () => {
       showToast.error(location.state.errorMessage);
       window.history.replaceState({}, "");
     }
-  }, [location, location.state, showToast, setSuccessRedirectUri]);
+  }, [location, location.state, showToast]);
 
   return (
     <div className={classes.sns}>
