@@ -3,6 +3,8 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 
 import "./index.scss";
+import "@/styles/tiptap.scss";
+import "highlight.js/styles/github-dark.min.css";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
