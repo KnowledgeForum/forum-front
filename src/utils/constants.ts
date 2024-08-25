@@ -15,3 +15,8 @@ export const SnsKindEnum = {
 } as const;
 
 export type SnsKind = (typeof SnsKindEnum)[keyof typeof SnsKindEnum];
+
+export const SessionStorageKey = {
+  SUCCESS_REDIRECT_STATE: "SUCCESS_REDIRECT_STATE",
+  FAILED_REDIRECT_STATE: "FAILED_REDIRECT_STATE",
+};
