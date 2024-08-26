@@ -8,9 +8,9 @@ import classes from "./BoardItem.module.scss";
 import BoardIcon from "@/assets/type-board.svg";
 import NewsIcon from "@/assets/type-news.svg";
 
-import { getIncludeComma, getTimeAgo } from "@/utils/timestamp";
+import { getIncludeComma, getTimeAgo } from "@/utils/number";
 
-import TagSlider from "../TagSlider/TagSlider";
+import Tag from "../Tag/Tag";
 import LikeButton from "@/features/LikeButton/LikeButton";
 
 type BoardItemProps = {
@@ -47,7 +47,7 @@ const BoardItem = ({ board, to }: BoardItemProps) => {
             <LikeButton boardId={board.boardId} isLikeProp={board.isLike} />
           </div>
         </div>
-        <TagSlider tags={board.tags} />
+        <Tag tags={board.tags} />
         <div className={classes.user}>
           <div className={classes.left} onClick={moveUser}>
             <img src={board.uploader.profilePath} alt="사용자 프로필 사진" className={classes.profileImg} />

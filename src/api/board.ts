@@ -506,7 +506,7 @@ public class Main {
       ],
       isLike: false,
       uploader: { userId: 2, nickname: "User_02", profilePath: "https://avatars.githubusercontent.com/u/1" },
-      viewCount: 651324,
+      viewCount: 1651324,
       likeCount: 366545,
       commentCount: 30,
       createdTime: "2024-08-17 12:30:45",

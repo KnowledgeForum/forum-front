@@ -16,7 +16,7 @@ import useInfinityScroll from "@/hooks/useInfinityScroll";
 import Modal from "@/components/Modal/Modal";
 
 import { NotificationTypeInfo } from "@/utils/constants";
-import { getTimeAgo } from "@/utils/timestamp";
+import { getTimeAgo } from "@/utils/number";
 import { getNextPagination } from "@/utils/pagination";
 
 const Notification = () => {

@@ -38,3 +38,20 @@ export const getTimeAgo = (dateString: string): string => {
 export const getIncludeComma = (number: number): string => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
+
+/**
+ * 숫자를 단위로 변환하는 함수
+ * @param number 변환할 숫자
+ * @returns 변환된 숫자와 단위를 포함한 문자열
+ */
+export const convertToUnit = (number: number): string => {
+  if (number >= 1000000) {
+    const convertedNumber = (number / 1000000).toFixed(1);
+    return `${convertedNumber}M`;
+  } else if (number >= 1000) {
+    const convertedNumber = (number / 1000).toFixed(0);
+    return `${convertedNumber}K`;
+  } else {
+    return number.toString();
+  }
+};
