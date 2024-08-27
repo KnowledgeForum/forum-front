@@ -24,6 +24,7 @@ type CommentItemProps = {
 const CommentItem = ({ comment, boardId, isChild = false }: CommentItemProps) => {
   const { user } = useUser();
 
+  const [isUpdate, setIsUpdate] = useState<boolean>(false);
   const [isWriteChild, setIsWriteChild] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -39,13 +40,20 @@ const CommentItem = ({ comment, boardId, isChild = false }: CommentItemProps) =>
     [comment.commentId],
   );
 
-  const handleUpdate = useCallback(() => {
-    console.log(boardId);
-    console.log("수정");
-  }, [boardId]);
+  const handleIsUpdate = useCallback(() => {
+    setIsUpdate((prev) => !prev);
+  }, []);
+
+  const handleUpdate = useCallback(
+    (content: string) => {
+      console.log("수정 : ", boardId, comment.commentId, content);
+      setIsUpdate(false);
+    },
+    [boardId, comment.commentId],
+  );
 
   const handleDelete = useCallback(() => {
-    console.log("삭제 : ", comment.commentId, boardId);
+    console.log("삭제 : ", boardId, comment.commentId, boardId);
     setIsOpen(false);
   }, [boardId, comment.commentId]);
 
@@ -73,7 +81,7 @@ const CommentItem = ({ comment, boardId, isChild = false }: CommentItemProps) =>
             <p className={classes.createdTime}>{getTimeAgo(comment.createdTime)}</p>
             {user?.userId === comment.uploader.userId && (
               <>
-                <button className={`${classes.btn} ${classes.update}`} onClick={handleUpdate}>
+                <button className={`${classes.btn} ${classes.update}`} onClick={handleIsUpdate}>
                   수정
                 </button>
                 <button className={`${classes.btn} ${classes.delete}`} onClick={handleOpen}>
@@ -83,7 +91,11 @@ const CommentItem = ({ comment, boardId, isChild = false }: CommentItemProps) =>
             )}
           </div>
         </div>
-        <EditorViewer className={classes.content} content={comment.content} />
+        {!isUpdate ? (
+          <EditorViewer className={classes.content} content={comment.content} />
+        ) : (
+          <CommentForm initialContent={comment.content} onSubmit={handleUpdate} />
+        )}
         {!isChild && user && (
           <button className={classes.writeBtn} onClick={handleWriteChild}>
             <img src={AddReply} alt="댓글 아이콘" />

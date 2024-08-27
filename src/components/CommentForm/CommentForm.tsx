@@ -1,4 +1,3 @@
-import { TextField } from "@mui/material";
 import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -8,6 +7,7 @@ import FormButton from "../FormButton/ForumButton";
 
 import useToast from "@/hooks/useToast";
 import useUser from "@/hooks/useUser";
+import Editor from "../Editor/Editor";
 
 type CommentFormProps = {
   initialContent?: string;
@@ -42,24 +42,14 @@ const CommentForm = ({ initialContent = "", className, onSubmit }: CommentFormPr
     [isDisabled, user, content, showToast, onSubmit, navigate],
   );
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setContent(e.target.value);
+  const handleChange = useCallback((value: string) => {
+    setContent(value);
   }, []);
 
   return (
     <form onSubmit={handleSubmit} className={`${classes.form} ${className}`}>
       {ToastElement}
-      {/* TODO: Tiptap으로 변경 */}
-      <TextField
-        type="text"
-        autoComplete="off"
-        variant="filled"
-        label="댓글"
-        fullWidth
-        multiline
-        value={content}
-        onChange={handleChange}
-      />
+      <Editor value={content} onChange={handleChange} isVisibleToolbar={true} placeholder="댓글" />
       <FormButton text="댓글 쓰기" isDisabled={isDisabled} />
     </form>
   );
