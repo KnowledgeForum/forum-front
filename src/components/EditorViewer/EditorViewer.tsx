@@ -9,7 +9,17 @@ type EditorViewerProps = {
 
 const EditorViewer = ({ content, className }: EditorViewerProps) => {
   useEffect(() => {
-    hljs.highlightAll();
+    const regex = /<pre><code(?:\s+class="[^"]*")?>([\s\S]*?)<\/code><\/pre>/g;
+    if (!content.match(regex)) return;
+
+    document.querySelectorAll("pre code:not([data-highlighted])").forEach((ele: Element) => {
+      const element = ele as HTMLElement;
+
+      if (!element.dataset.highlighted) {
+        hljs.highlightElement(element);
+        element.dataset.highlighted = "true";
+      }
+    });
   }, [content]);
 
   return (

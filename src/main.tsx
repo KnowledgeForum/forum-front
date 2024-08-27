@@ -4,6 +4,7 @@ import App from "./App.tsx";
 
 import "./index.scss";
 import "@/styles/tiptap.scss";
+import "@/styles/mui.scss";
 import "highlight.js/styles/github-dark.min.css";
 
 import "@fontsource/roboto/300.css";
