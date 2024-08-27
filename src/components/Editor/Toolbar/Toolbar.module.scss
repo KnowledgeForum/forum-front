@@ -43,65 +43,65 @@
 }
 
 .h1 {
-  background-image: url("/src/assets/editor_h1.svg");
+  background-image: url("/src/assets/editor-h1.svg");
 }
 
 .h2 {
-  background-image: url("/src/assets/editor_h2.svg");
+  background-image: url("/src/assets/editor-h2.svg");
 }
 
 .h3 {
-  background-image: url("/src/assets/editor_h3.svg");
+  background-image: url("/src/assets/editor-h3.svg");
 }
 
 .bold {
-  background-image: url("/src/assets/editor_bold.svg");
+  background-image: url("/src/assets/editor-bold.svg");
 }
 
 .italic {
-  background-image: url("/src/assets/editor_italic.svg");
+  background-image: url("/src/assets/editor-italic.svg");
 }
 
 .underline {
-  background-image: url("/src/assets/editor_underline.svg");
+  background-image: url("/src/assets/editor-underline.svg");
 }
 
 .strike {
-  background-image: url("/src/assets/editor_strike.svg");
+  background-image: url("/src/assets/editor-strike.svg");
 }
 
 .bulleted {
   background-size: 1.5rem !important;
-  background-image: url("/src/assets/editor_list_bulleted.svg");
+  background-image: url("/src/assets/editor-list-bulleted.svg");
 }
 
 .numbered {
   background-size: 1.5rem !important;
-  background-image: url("/src/assets/editor_list_numbered.svg");
+  background-image: url("/src/assets/editor-list-numbered.svg");
 }
 
 .quote {
-  background-image: url("/src/assets/editor_quote.svg");
+  background-image: url("/src/assets/editor-quote.svg");
 }
 
 .link {
-  background-image: url("/src/assets/editor_link.svg");
+  background-image: url("/src/assets/editor-link.svg");
 }
 
 .image {
-  background-image: url("/src/assets/editor_image.svg");
+  background-image: url("/src/assets/editor-image.svg");
 }
 
 .youtube {
-  background-image: url("/src/assets/editor_youtube.svg");
+  background-image: url("/src/assets/editor-youtube.svg");
 }
 
 .table {
-  background-image: url("/src/assets/editor_table.svg");
+  background-image: url("/src/assets/editor-table.svg");
 }
 
 .newline {
-  background-image: url("/src/assets/editor_line.svg");
+  background-image: url("/src/assets/editor-line.svg");
 }
 
 @include mobile {

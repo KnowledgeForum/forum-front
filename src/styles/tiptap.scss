@@ -73,16 +73,22 @@
 
   ul,
   ol {
-    padding: 0.5rem 2rem;
+    padding: 0 1rem;
+    margin: 0.875rem 1rem 0.875rem 0.4rem;
 
-    p {
-      padding: 0;
+    ul,
+    ol {
+      margin: 0;
+    }
+
+    li p {
+      margin-top: 0.25em;
+      margin-bottom: 0.25em;
     }
   }
 
   ul > li {
     list-style: disc;
-    padding: 0.2rem 0;
 
     li {
       list-style: circle;

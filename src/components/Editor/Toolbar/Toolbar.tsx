@@ -1,123 +1,88 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { MouseEvent, useCallback, useMemo, useState } from "react";
 import { Editor } from "@tiptap/react";
 
 import styles from "./Toolbar.module.scss";
 
-import EditorDialog, { ModalItem } from "@/components/Editor/EditorDialog/EditorDialog";
+import EditorDialog from "@/components/Editor/EditorDialog/EditorDialog";
 
 type ToolbarProps = {
   editor: Editor;
   onChangeImage?: (imageId: number) => void;
 };
 
+type ModalItems = "link" | "youtube" | "table" | "image";
+
+type ModalState = {
+  [key in ModalItems]: boolean;
+};
+
+type ModalItem = {
+  [key in ModalItems]: {
+    key: string;
+    title: string;
+    value: string | File;
+    placeholder: string;
+    type?: string;
+  }[];
+};
+
 const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
   const linkKeys = useMemo(() => ["url", "text"], []);
-  const [isVisibleLinkModal, setIsVisibleLinkModal] = useState<boolean>(false);
-  const [linkItems, setLinkItems] = useState<ModalItem[]>([
-    {
-      key: linkKeys[0],
-      title: "URL",
-      value: "",
-      placeholder: "URL 입력",
-    },
-    {
-      key: linkKeys[1],
-      title: "Text",
-      value: "",
-      placeholder: "대체할 텍스트 입력",
-    },
-  ]);
-
   const youtubeKeys = useMemo(() => ["width", "height", "url"], []);
-  const [isVisibleYoutubeModal, setIsVisibleYoutubeModal] = useState<boolean>(false);
-  const [youtubeItems, setYoutubeItems] = useState<ModalItem[]>([
-    {
-      key: youtubeKeys[0],
-      title: "너비",
-      value: "320",
-      placeholder: "너비 입력",
-      type: "number",
-    },
-    {
-      key: youtubeKeys[1],
-      title: "높이",
-      value: "180",
-      placeholder: "높이 입력",
-      type: "number",
-    },
-    {
-      key: youtubeKeys[2],
-      title: "URL",
-      value: "",
-      placeholder: "Yotubue URL 입력",
-    },
-  ]);
-
   const tableKeys = useMemo(() => ["row", "cell"], []);
-  const [isVisibleTableModal, setIsVisibleTableModal] = useState<boolean>(false);
-  const [tableItems, setTableItems] = useState<ModalItem[]>([
-    {
-      key: tableKeys[0],
-      title: "Row",
-      value: "1",
-      placeholder: "Row 입력",
-      type: "number",
-    },
-    {
-      key: tableKeys[1],
-      title: "Column",
-      value: "1",
-      placeholder: "Column 입력",
-      type: "number",
-    },
-  ]);
-
   const imageKeys = useMemo(() => ["url", "file"], []);
-  const [isVisibleImageModal, setIsVisibleImageModal] = useState<boolean>(false);
-  const [imageItems, setImageItems] = useState<ModalItem[]>([
-    {
-      key: imageKeys[0],
-      title: "URL",
-      value: "",
-      placeholder: "이미지 URL 입력",
-    },
-    {
-      key: imageKeys[1],
-      title: "파일 선택",
-      value: "",
-      placeholder: "",
-      type: "file",
-    },
-  ]);
 
-  const changeValue = useCallback((key: string, list: any[], value: string | File) => {
-    const findedIdx = list.findIndex((val) => val.key === key);
-    const newItems = [...list];
-    newItems[findedIdx].value = value;
+  const [modals, setModals] = useState<ModalState>({
+    link: false,
+    youtube: false,
+    table: false,
+    image: false,
+  });
 
-    return newItems;
-  }, []);
+  const [items, setItems] = useState<ModalItem>({
+    link: [
+      { key: linkKeys[0], title: "URL", value: "", placeholder: "URL 입력" },
+      { key: linkKeys[1], title: "Text", value: "", placeholder: "대체할 텍스트 입력" },
+    ],
+    youtube: [
+      { key: youtubeKeys[0], title: "너비", value: "320", placeholder: "너비 입력", type: "number" },
+      { key: youtubeKeys[1], title: "높이", value: "180", placeholder: "높이 입력", type: "number" },
+      { key: youtubeKeys[2], title: "URL", value: "", placeholder: "Yotubue URL 입력" },
+    ],
+    table: [
+      { key: tableKeys[0], title: "Row", value: "1", placeholder: "Row 입력", type: "number" },
+      { key: tableKeys[1], title: "Column", value: "1", placeholder: "Column 입력", type: "number" },
+    ],
+    image: [
+      { key: imageKeys[0], title: "URL", value: "", placeholder: "이미지 URL 입력" },
+      { key: imageKeys[1], title: "파일 선택", value: "", placeholder: "", type: "file" },
+    ],
+  });
 
-  const handleLinkModal = useCallback((event?: MouseEvent<HTMLButtonElement>) => {
+  const toggleModal = useCallback((type: ModalItems, event?: MouseEvent<HTMLButtonElement>) => {
     event?.stopPropagation();
-    setIsVisibleImageModal(false);
-    setIsVisibleYoutubeModal(false);
-    setIsVisibleTableModal(false);
-    setIsVisibleLinkModal((prev) => !prev);
+
+    setModals((prev) => ({
+      link: false,
+      youtube: false,
+      table: false,
+      image: false,
+      [type]: !prev[type],
+    }));
   }, []);
 
-  const handleLink = useCallback(
-    (key: string, changedVal: string) => {
-      const newItems = changeValue(key, linkItems, changedVal);
-      setLinkItems(newItems);
-    },
-    [linkItems, changeValue],
-  );
+  const changeValue = useCallback((type: ModalItems, key: string, value: string | File) => {
+    setItems((prev) => {
+      const newItems = [...prev[type]];
+      const index = newItems.findIndex((item) => item.key === key);
+      newItems[index].value = value;
+
+      return { ...prev, [type]: newItems };
+    });
+  }, []);
 
   const setLink = useCallback(() => {
-    setIsVisibleLinkModal(false);
-    if (!linkItems[0].value || !linkItems[1].value) return;
+    if (!items.link[0].value || !items.link[1].value) return;
 
     const { state } = editor;
     const { selection } = state;
@@ -130,8 +95,8 @@ const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
 
     // 드래그 한 후 텍스트 선택 시
     if (nodeAtSelection && nodeAtSelection.type.name !== "codeBlock" && isTextSelected) {
-      const href = linkItems[0].value;
-      const text = linkItems[1].value;
+      const href = items.link[0].value;
+      const text = items.link[1].value;
 
       tr = state.tr.deleteSelection();
       tr = state.tr.insertText(text as string);
@@ -147,70 +112,39 @@ const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
         .chain()
         .focus()
         .setLink({
-          href: linkItems[0].value as string,
+          href: items.link[0].value as string,
         })
-        .insertContent(linkItems[1].value as string)
+        .insertContent(items.link[1].value as string)
         .run();
     }
 
-    const newLinkItems = [...linkItems];
+    const newLinkItems = [...items.link];
     newLinkItems[0].value = "";
     newLinkItems[1].value = "";
 
-    setLinkItems(newLinkItems);
-  }, [editor, linkItems]);
-
-  const handleYoutubeModal = useCallback((event?: MouseEvent<HTMLButtonElement>) => {
-    event?.stopPropagation();
-    setIsVisibleImageModal(false);
-    setIsVisibleLinkModal(false);
-    setIsVisibleTableModal(false);
-    setIsVisibleYoutubeModal((prev) => !prev);
-  }, []);
-
-  const handleYoutube = useCallback(
-    (key: string, changedVal: string) => {
-      const newItems = changeValue(key, youtubeItems, changedVal);
-      setYoutubeItems(newItems);
-    },
-    [youtubeItems, changeValue],
-  );
+    setItems((prev) => ({ ...prev, link: newLinkItems }));
+    toggleModal("link");
+  }, [editor, items.link, toggleModal]);
 
   const setYoutube = useCallback(() => {
     editor.commands.setYoutubeVideo({
-      src: youtubeItems[2].value as string,
-      width: !isNaN(Number(youtubeItems[0].value)) ? Number(youtubeItems[0].value) : 320,
-      height: !isNaN(Number(youtubeItems[1].value)) ? Number(youtubeItems[1].value) : 180,
+      src: items.youtube[2].value as string,
+      width: !isNaN(Number(items.youtube[0].value)) ? Number(items.youtube[0].value) : 320,
+      height: !isNaN(Number(items.youtube[1].value)) ? Number(items.youtube[1].value) : 180,
     });
 
-    const newYoutubeItems = [...youtubeItems];
+    const newYoutubeItems = [...items.youtube];
     newYoutubeItems[0].value = "320";
     newYoutubeItems[1].value = "180";
     newYoutubeItems[2].value = "";
 
-    setYoutubeItems(newYoutubeItems);
-    setIsVisibleYoutubeModal(false);
-  }, [editor, youtubeItems]);
-
-  const handleTableModal = useCallback((event?: MouseEvent<HTMLButtonElement>) => {
-    event?.stopPropagation();
-    setIsVisibleLinkModal(false);
-    setIsVisibleYoutubeModal(false);
-    setIsVisibleImageModal(false);
-    setIsVisibleTableModal((prev) => !prev);
-  }, []);
-
-  const handleTable = useCallback(
-    (key: string, changedVal: string) => {
-      const newItems = changeValue(key, tableItems, changedVal);
-      setTableItems(newItems);
-    },
-    [tableItems, changeValue],
-  );
+    setItems((prev) => ({ ...prev, youtube: newYoutubeItems }));
+    toggleModal("youtube");
+  }, [editor.commands, items.youtube, toggleModal]);
 
   const setTable = useCallback(() => {
-    const rows = !isNaN(Number(tableItems[0].value)) ? Number(tableItems[0].value) : 1;
-    const cols = !isNaN(Number(tableItems[1].value)) ? Number(tableItems[1].value) : 1;
+    const rows = !isNaN(Number(items.table[0].value)) ? Number(items.table[0].value) : 1;
+    const cols = !isNaN(Number(items.table[1].value)) ? Number(items.table[1].value) : 1;
     if (rows <= 0 || cols <= 0) return;
 
     editor.commands.insertTable({
@@ -219,64 +153,37 @@ const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
       withHeaderRow: false,
     });
 
-    const newTableItems = [...tableItems];
+    const newTableItems = [...items.table];
     newTableItems[0].value = "1";
     newTableItems[1].value = "1";
 
-    setTableItems(newTableItems);
-    setIsVisibleTableModal(false);
-  }, [editor.commands, tableItems]);
+    setItems((prev) => ({ ...prev, table: newTableItems }));
+    toggleModal("table");
+  }, [editor.commands, items.table, toggleModal]);
 
-  const handleImageModal = useCallback((event?: MouseEvent<HTMLButtonElement>) => {
-    event?.stopPropagation();
-    setIsVisibleLinkModal(false);
-    setIsVisibleYoutubeModal(false);
-    setIsVisibleTableModal(false);
-    setIsVisibleImageModal((prev) => !prev);
-  }, []);
+  const setImage = useCallback(
+    async ({ url, file }: { url?: string; file?: File }) => {
+      toggleModal("image");
+      if (!url && !file) return;
 
-  const handleImage = useCallback(
-    (key: string, changedVal: string) => {
-      const newItems = changeValue(key, imageItems, changedVal);
-      setImageItems(newItems);
-    },
-    [imageItems, changeValue],
-  );
-
-  const setImage = useCallback(async () => {
-    const url = imageItems[0].value;
-    const file = imageItems[1].value;
-
-    if (file && typeof file === "object") {
-      try {
-        const formData = new FormData();
-        formData.append("image", file);
-
-        editor.commands.setImage({ src: URL.createObjectURL(file), alt: file.name });
-        onChangeImage?.(1);
-      } catch (error) {
-        console.error(error);
+      if (file) {
+        try {
+          editor.commands.setImage({ src: URL.createObjectURL(file), alt: file.name });
+          onChangeImage?.(1);
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
+        editor.commands.setImage({ src: url as string });
       }
-    } else {
-      editor.commands.setImage({ src: url as string });
-    }
 
-    const newImageItems = [...imageItems];
-    newImageItems[0].value = "";
-    newImageItems[1].value = "";
+      const newImageItems = [...items.image];
+      newImageItems[0].value = "";
+      newImageItems[1].value = "";
 
-    setImageItems(newImageItems);
-    setIsVisibleImageModal(false);
-  }, [imageItems, editor.commands, onChangeImage]);
-
-  const handleImageFile = useCallback(
-    (key: string, file: File) => {
-      const newItems = changeValue(key, imageItems, file);
-      setImageItems(newItems);
-      setIsVisibleImageModal(false);
-      setImage();
+      setItems((prev) => ({ ...prev, image: newImageItems }));
     },
-    [imageItems, setImage, changeValue],
+    [items.image, editor.commands, onChangeImage, toggleModal],
   );
 
   return (
@@ -350,44 +257,59 @@ const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
           <button
             type="button"
             className={`${styles.toolbarBtn} ${styles.link} ${editor.isActive("link") ? styles.active : null}`}
-            onClick={handleLinkModal}
+            onClick={(event) => toggleModal("link", event)}
           />
           <EditorDialog
-            isVisible={isVisibleLinkModal}
-            items={linkItems}
-            closeVisible={handleLinkModal}
-            onChange={handleLink}
+            isVisible={modals.link}
+            items={items.link}
+            closeVisible={() => toggleModal("link")}
+            onChange={(key, value) => changeValue("link", key, value)}
             onSubmit={setLink}
           />
         </div>
         <div className={styles.modalBox}>
-          <button type="button" className={`${styles.toolbarBtn} ${styles.image}`} onClick={handleImageModal} />
+          <button
+            type="button"
+            className={`${styles.toolbarBtn} ${styles.image}`}
+            onClick={(event) => toggleModal("image", event)}
+          />
           <EditorDialog
-            isVisible={isVisibleImageModal}
-            items={imageItems}
-            closeVisible={handleImageModal}
-            onChange={handleImage}
-            onChangeFile={handleImageFile}
-            onSubmit={setImage}
+            isVisible={modals.image}
+            items={items.image}
+            closeVisible={() => toggleModal("image")}
+            onChange={(key, value) => changeValue("image", key, value)}
+            onChangeFile={(key, file) => {
+              changeValue("image", key, file);
+              setImage({ file });
+            }}
+            onSubmit={() => setImage({ url: items.image[0].value as string })}
           />
         </div>
         <div className={styles.modalBox}>
-          <button type="button" className={`${styles.toolbarBtn} ${styles.youtube}`} onClick={handleYoutubeModal} />
+          <button
+            type="button"
+            className={`${styles.toolbarBtn} ${styles.youtube}`}
+            onClick={(event) => toggleModal("youtube", event)}
+          />
           <EditorDialog
-            isVisible={isVisibleYoutubeModal}
-            items={youtubeItems}
-            closeVisible={handleYoutubeModal}
-            onChange={handleYoutube}
+            isVisible={modals.youtube}
+            items={items.youtube}
+            closeVisible={() => toggleModal("youtube")}
+            onChange={(key, value) => changeValue("youtube", key, value)}
             onSubmit={setYoutube}
           />
         </div>
         <div className={styles.modalBox}>
-          <button type="button" className={`${styles.toolbarBtn} ${styles.table}`} onClick={handleTableModal} />
+          <button
+            type="button"
+            className={`${styles.toolbarBtn} ${styles.table}`}
+            onClick={(event) => toggleModal("table", event)}
+          />
           <EditorDialog
-            isVisible={isVisibleTableModal}
-            items={tableItems}
-            closeVisible={handleTableModal}
-            onChange={handleTable}
+            isVisible={modals.table}
+            items={items.table}
+            closeVisible={() => toggleModal("table")}
+            onChange={(key, value) => changeValue("table", key, value)}
             onSubmit={setTable}
           />
         </div>

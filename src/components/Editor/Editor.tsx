@@ -18,6 +18,8 @@ import Toolbar from "./Toolbar/Toolbar";
 
 import { Indent } from "@/utils/indent";
 import CustomCodeBlockLowlight from "@/utils/codeBlockIndent";
+import BulletList from "@tiptap/extension-bullet-list";
+import ListItem from "@tiptap/extension-list-item";
 
 type EditorProps = {
   value: string;
@@ -44,6 +46,8 @@ const Editor = ({ value, isVisibleToolbar = true, placeholder, className, onChan
       Table.configure({
         resizable: true,
       }),
+      BulletList,
+      ListItem,
       Underline,
       TableRow,
       TableHeader,
@@ -52,6 +56,7 @@ const Editor = ({ value, isVisibleToolbar = true, placeholder, className, onChan
       Placeholder.configure({ placeholder: placeholder }),
       Markdown,
       CustomCodeBlockLowlight,
+      ListItem,
       Indent,
     ],
     content: value,
