@@ -91,7 +91,7 @@ const Mobileheader = () => {
                 <>
                   <Link to="/login">로그인</Link>
                   <div className={classes.line} />
-                  <Link to="/signup">회원가입</Link>
+                  <Link to="/register">회원가입</Link>
                 </>
               )}
             </div>

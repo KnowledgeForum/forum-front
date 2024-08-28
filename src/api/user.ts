@@ -2,7 +2,7 @@ import { IntroUser } from "@/types/user";
 
 export const UserApi = {
   getIntroUser: async (): Promise<IntroUser> => {
-    throw new Error("Unauthorized Error");
+    // throw new Error("Unauthorized Error");
     return {
       userId: 1,
       nickname: "김승용",
