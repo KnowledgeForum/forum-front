@@ -1,0 +1,23 @@
+.title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.description {
+  margin: 1.5625rem 0;
+}
+
+.btnBox {
+  display: flex;
+  justify-content: flex-end;
+
+  .cancel {
+    color: $white-color;
+  }
+
+  .delete {
+    margin-left: 1.25rem;
+    color: $red-color;
+    font-weight: 600;
+  }
+}

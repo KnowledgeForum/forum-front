@@ -3,10 +3,11 @@ import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../layouts/Main/MainLayout";
 import CenterLayout from "@/layouts/Center/CenterLayout";
 
-import Main from "../pages/Main/Main";
-import News from "../pages/News/News";
+import Main from "@/pages/Main/Main";
+import News from "@/pages/News/News";
 import Follow from "@/pages/Follow/Follow";
 import Board from "@/pages/Board/Board";
+import BoardDetail from "@/pages/BoardDetail/BoardDetail";
 
 import Login from "@/pages/Login/Login";
 import Callback from "@/pages/Callback/Callback";
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "/follow",
         element: <Follow />,
+      },
+      {
+        path: "/board/:boardId",
+        element: <BoardDetail />,
       },
     ],
   },

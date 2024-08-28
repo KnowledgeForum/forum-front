@@ -2,17 +2,20 @@
   color: $white-color;
   background-color: $background-color;
 
-  font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 * {
-  font-family: "Noto Sans KR", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Noto Sans KR", system-ui, Avenir, Helvetica, Arial, sans-serif !important;
   font-size: 1rem;
   font-weight: 400;
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {

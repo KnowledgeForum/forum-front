@@ -41,3 +41,10 @@
 .MuiSvgIcon-root {
   color: $white-color !important;
 }
+
+// dialog color
+.MuiDialog-paper {
+  padding: 1.875rem;
+  background-color: $background-color !important;
+  color: $white-color !important;
+}

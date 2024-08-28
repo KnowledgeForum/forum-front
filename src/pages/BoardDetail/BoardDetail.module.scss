@@ -1,0 +1,129 @@
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+  padding: 1.25rem;
+  border-radius: $border-radius;
+  background-color: $background-light-color;
+
+  .top {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: 1fr;
+
+    .left {
+      display: flex;
+      gap: 1.25rem;
+
+      .backBox {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        background-color: #1e252b;
+        cursor: pointer;
+      }
+
+      .user {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+
+        .profileBox {
+          width: 2.5rem;
+          height: 2.5rem;
+          border-radius: 50%;
+
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+          }
+        }
+
+        .info {
+          .nickname {
+            font-size: 1rem;
+            font-weight: 600;
+
+            &::after {
+              content: "•";
+              margin-left: 0.3125rem;
+              color: #c5d0e6;
+            }
+          }
+
+          .date {
+            font-size: 0.875rem;
+            color: #c5d0e6;
+          }
+        }
+      }
+    }
+
+    .btnBox {
+      display: flex;
+      gap: 1.25rem;
+
+      .update {
+        @include button(#ffffff, $primary-light-color);
+      }
+
+      .delete {
+        @include button(#ffffff, #ff4e4e);
+      }
+    }
+  }
+
+  .title {
+    margin-bottom: 0.625rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .bottom {
+    display: flex;
+    gap: 0.625rem;
+
+    & > button:last-child {
+      margin-left: auto;
+    }
+
+    .btn {
+      @include button(#ffffff, $background-color, 0.3125rem 0.3125rem);
+      display: flex;
+      align-items: center;
+      gap: 0.3125rem;
+      font-weight: 400;
+
+      img {
+        width: 1.375rem;
+        height: 1.375rem;
+      }
+    }
+  }
+}
+
+.hr {
+  width: 100%;
+  height: 1px;
+  margin: 0;
+  background-color: #7d7d7d;
+}
+
+@media (max-width: 459px) {
+  .top {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto !important;
+    gap: 1.25rem;
+
+    .btnBox {
+      flex-direction: column;
+      gap: 0.75rem !important;
+    }
+  }
+}

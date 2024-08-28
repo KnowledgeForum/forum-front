@@ -1,0 +1,31 @@
+.child {
+  display: flex;
+  flex-direction: column;
+  gap: 1.875rem;
+
+  .comment {
+    position: relative;
+    margin-left: 1.875rem;
+
+    .line {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 0.3125rem;
+      background-color: $primary-color;
+    }
+
+    .left {
+      position: relative;
+      left: 0.9375rem;
+      margin-right: 0.9375rem;
+    }
+  }
+
+  .moreBtn {
+    align-self: flex-start;
+    font-size: 0.875rem;
+    color: $gray-color;
+  }
+}
