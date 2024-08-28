@@ -148,18 +148,14 @@ const Notification = () => {
                   data.pages.map((page) =>
                     page.notifications.map((notification) => (
                       <Link to={`/board/${notification.board.boardId}`} key={notification.notificationId}>
-                        <Box display={"flex"} alignItems={"center"} gap={"0.625rem"}>
-                          <Box>
-                            <img src={notification.sender.profilePath} alt="프로필 이미지" width={40} height={40} />
-                          </Box>
-                          <Box>
-                            <Box display={"flex"} alignItems={"center"} gap={"0.625rem"}>
-                              <strong>{notification.sender.username}</strong>
-                              <span>{getTimeAgo(notification.createdTime)}</span>
-                            </Box>
-                            {getNotificationMessage(notification)}
-                          </Box>
-                        </Box>
+                        <div className={classes.top}>
+                          <img src={notification.sender.profilePath} alt="프로필 이미지" />
+                          <div className={classes.info}>
+                            <div className={classes.username}>{notification.sender.username}</div>
+                            <div className={classes.time}>{getTimeAgo(notification.createdTime)}</div>
+                          </div>
+                        </div>
+                        <div className={classes.text}>{getNotificationMessage(notification)}</div>
                       </Link>
                     )),
                   )
