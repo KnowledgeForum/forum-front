@@ -24,3 +24,26 @@
   font-size: 0.875rem;
   text-align: center;
 }
+
+@include tablet-vertical {
+  .modal {
+    right: 0;
+  }
+}
+
+@media (min-width: 660px) and (max-width: $breakpoint-mobile) {
+  .modal {
+    right: 0;
+    padding: 0.625rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    min-width: 0 !important;
+  }
+}

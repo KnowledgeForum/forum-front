@@ -11,14 +11,13 @@ type TableItem = {
 
 type TableDialogProps = {
   isVisible: boolean;
-  buttonRef: React.RefObject<HTMLButtonElement>;
   item: TableItem;
   onSubmit: () => void;
   onChange: ({ col, row }: { col: number; row: number }) => void;
   onCloseVisible: () => void;
 };
 
-const TableDialog = ({ isVisible, buttonRef, item, onSubmit, onChange, onCloseVisible }: TableDialogProps) => {
+const TableDialog = ({ isVisible, item, onSubmit, onChange, onCloseVisible }: TableDialogProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const colRefs = useRef<RefObject<HTMLTableCellElement>[][]>(
     Array.from({ length: 10 }).map(() => Array.from({ length: 10 }).map(() => createRef<HTMLTableCellElement>())),
@@ -44,7 +43,7 @@ const TableDialog = ({ isVisible, buttonRef, item, onSubmit, onChange, onCloseVi
     [onChange],
   );
 
-  useDialogCloseBoundary({ isVisible, buttonRef, modalRef, onClose: onCloseVisible });
+  useDialogCloseBoundary({ isVisible, modalRef, onClose: onCloseVisible });
 
   if (!isVisible) return null;
 

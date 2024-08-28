@@ -14,25 +14,16 @@ export type ModalItem = {
 type ModalProps = {
   isVisible: boolean;
   items: ModalItem[];
-  buttonRef: React.RefObject<HTMLButtonElement>;
   onSubmit: () => void;
   closeVisible: () => void;
   onChange?: (key: string, changedVal: string) => void;
   onChangeFile?: (key: string, file: File) => void;
 };
 
-const EditorInputModal = ({
-  items,
-  isVisible,
-  buttonRef,
-  onChange,
-  onChangeFile,
-  onSubmit,
-  closeVisible,
-}: ModalProps) => {
+const EditorInputModal = ({ items, isVisible, onChange, onChangeFile, onSubmit, closeVisible }: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
-  useDialogCloseBoundary({ isVisible, buttonRef, modalRef, onClose: closeVisible });
+  useDialogCloseBoundary({ isVisible, modalRef, onClose: closeVisible });
 
   const handleChange = useCallback(
     (key: string, changedVal: string) => {

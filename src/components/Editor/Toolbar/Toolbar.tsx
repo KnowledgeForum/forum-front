@@ -1,4 +1,4 @@
-import { MouseEvent, useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Editor } from "@tiptap/react";
 
 import styles from "./Toolbar.module.scss";
@@ -27,22 +27,11 @@ type ModalItem = {
   }[];
 };
 
-type ButtonRefs = {
-  [key in ModalItems]: React.RefObject<HTMLButtonElement>;
-};
-
 const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
   const linkKeys = useMemo(() => ["url", "text"], []);
   const youtubeKeys = useMemo(() => ["url"], []);
   const tableKeys = useMemo(() => ["row", "cell"], []);
   const imageKeys = useMemo(() => ["url", "file"], []);
-
-  const btnRefs = useRef<ButtonRefs>({
-    link: useRef<HTMLButtonElement>(null),
-    youtube: useRef<HTMLButtonElement>(null),
-    table: useRef<HTMLButtonElement>(null),
-    image: useRef<HTMLButtonElement>(null),
-  });
 
   const [modals, setModals] = useState<ModalState>({
     link: false,
@@ -74,9 +63,7 @@ const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
     ],
   });
 
-  const toggleModal = useCallback((type: ModalItems, event?: MouseEvent<HTMLButtonElement>) => {
-    event?.stopPropagation();
-
+  const toggleModal = useCallback((type: ModalItems) => {
     setModals((prev) => ({
       link: false,
       youtube: false,
@@ -287,14 +274,12 @@ const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
             />
           ) : (
             <button
-              ref={btnRefs.current.link}
               type="button"
               className={`${styles.toolbarBtn} ${styles.link}`}
-              onClick={(event) => toggleModal("link", event)}
+              onClick={() => toggleModal("link")}
             />
           )}
           <EditorDialog
-            buttonRef={btnRefs.current.link}
             isVisible={modals.link}
             items={items.link}
             closeVisible={() => toggleModal("link")}
@@ -304,13 +289,11 @@ const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
         </div>
         <div className={styles.modalBox}>
           <button
-            ref={btnRefs.current.image}
             type="button"
             className={`${styles.toolbarBtn} ${styles.image}`}
-            onClick={(event) => toggleModal("image", event)}
+            onClick={() => toggleModal("image")}
           />
           <EditorDialog
-            buttonRef={btnRefs.current.image}
             isVisible={modals.image}
             items={items.image}
             closeVisible={() => toggleModal("image")}
@@ -324,13 +307,11 @@ const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
         </div>
         <div className={styles.modalBox}>
           <button
-            ref={btnRefs.current.youtube}
             type="button"
             className={`${styles.toolbarBtn} ${styles.youtube}`}
-            onClick={(event) => toggleModal("youtube", event)}
+            onClick={() => toggleModal("youtube")}
           />
           <EditorDialog
-            buttonRef={btnRefs.current.youtube}
             isVisible={modals.youtube}
             items={items.youtube}
             closeVisible={() => toggleModal("youtube")}
@@ -340,13 +321,11 @@ const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
         </div>
         <div className={styles.modalBox}>
           <button
-            ref={btnRefs.current.table}
             type="button"
             className={`${styles.toolbarBtn} ${styles.table}`}
-            onClick={(event) => toggleModal("table", event)}
+            onClick={() => toggleModal("table")}
           />
           <TableDialog
-            buttonRef={btnRefs.current.table}
             isVisible={modals.table}
             item={{ row: Number(items.table[0].value), col: Number(items.table[1].value) }}
             onCloseVisible={() => toggleModal("table")}
