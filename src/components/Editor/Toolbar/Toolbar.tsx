@@ -1,9 +1,10 @@
-import { MouseEvent, useCallback, useMemo, useState } from "react";
+import { MouseEvent, useCallback, useMemo, useRef, useState } from "react";
 import { Editor } from "@tiptap/react";
 
 import styles from "./Toolbar.module.scss";
 
 import EditorDialog from "@/components/Editor/EditorDialog/EditorDialog";
+import TableDialog from "../TableDialog/TableDialog";
 
 type ToolbarProps = {
   editor: Editor;
@@ -21,16 +22,27 @@ type ModalItem = {
     key: string;
     title: string;
     value: string | File;
-    placeholder: string;
+    placeholder?: string;
     type?: string;
   }[];
 };
 
+type ButtonRefs = {
+  [key in ModalItems]: React.RefObject<HTMLButtonElement>;
+};
+
 const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
   const linkKeys = useMemo(() => ["url", "text"], []);
-  const youtubeKeys = useMemo(() => ["width", "height", "url"], []);
+  const youtubeKeys = useMemo(() => ["url"], []);
   const tableKeys = useMemo(() => ["row", "cell"], []);
   const imageKeys = useMemo(() => ["url", "file"], []);
+
+  const btnRefs = useRef<ButtonRefs>({
+    link: useRef<HTMLButtonElement>(null),
+    youtube: useRef<HTMLButtonElement>(null),
+    table: useRef<HTMLButtonElement>(null),
+    image: useRef<HTMLButtonElement>(null),
+  });
 
   const [modals, setModals] = useState<ModalState>({
     link: false,
@@ -45,13 +57,16 @@ const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
       { key: linkKeys[1], title: "Text", value: "", placeholder: "대체할 텍스트 입력" },
     ],
     youtube: [
-      { key: youtubeKeys[0], title: "너비", value: "320", placeholder: "너비 입력", type: "number" },
-      { key: youtubeKeys[1], title: "높이", value: "180", placeholder: "높이 입력", type: "number" },
-      { key: youtubeKeys[2], title: "URL", value: "", placeholder: "Yotubue URL 입력" },
+      {
+        key: youtubeKeys[0],
+        title: "URL",
+        value: "https://youtu.be/S4zdr9m_w4w?si=hrF0J5MbU3Yb62ts",
+        placeholder: "Yotubue URL 입력",
+      },
     ],
     table: [
-      { key: tableKeys[0], title: "Row", value: "1", placeholder: "Row 입력", type: "number" },
-      { key: tableKeys[1], title: "Column", value: "1", placeholder: "Column 입력", type: "number" },
+      { key: tableKeys[0], title: "Row", value: "1" },
+      { key: tableKeys[1], title: "Column", value: "1" },
     ],
     image: [
       { key: imageKeys[0], title: "URL", value: "", placeholder: "이미지 URL 입력" },
@@ -81,20 +96,34 @@ const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
     });
   }, []);
 
+  const handleTableChange = useCallback(
+    ({ col, row }: { col: number; row: number }) => {
+      const newTableItems = [...items.table];
+      newTableItems[0].value = String(row);
+      newTableItems[1].value = String(col);
+
+      setItems((prev) => ({ ...prev, table: newTableItems }));
+    },
+    [items.table],
+  );
+
   const setLink = useCallback(() => {
     if (!items.link[0].value || !items.link[1].value) return;
 
     const { state } = editor;
-    const { selection } = state;
-    const { from, to } = selection;
-    const { $from } = selection;
+    const { from, to } = state.selection;
 
     const isTextSelected = from < to;
-    const nodeAtSelection = $from.node();
+    const nodeAtSelection = state.selection.$from.node();
     let tr;
 
+    // 코드 블록 안에서는 링크를 추가할 수 없음
+    if (!nodeAtSelection || nodeAtSelection.type.name === "codeBlock") {
+      return;
+    }
+
     // 드래그 한 후 텍스트 선택 시
-    if (nodeAtSelection && nodeAtSelection.type.name !== "codeBlock" && isTextSelected) {
+    if (isTextSelected) {
       const href = items.link[0].value;
       const text = items.link[1].value;
 
@@ -107,7 +136,7 @@ const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
       tr = tr.addMark(from, from + (text as string).length, linkMark);
 
       editor.view.dispatch(tr);
-    } else if (nodeAtSelection.type.name !== "codeBlock") {
+    } else {
       editor
         .chain()
         .focus()
@@ -128,15 +157,11 @@ const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
 
   const setYoutube = useCallback(() => {
     editor.commands.setYoutubeVideo({
-      src: items.youtube[2].value as string,
-      width: !isNaN(Number(items.youtube[0].value)) ? Number(items.youtube[0].value) : 320,
-      height: !isNaN(Number(items.youtube[1].value)) ? Number(items.youtube[1].value) : 180,
+      src: items.youtube[0].value as string,
     });
 
     const newYoutubeItems = [...items.youtube];
-    newYoutubeItems[0].value = "320";
-    newYoutubeItems[1].value = "180";
-    newYoutubeItems[2].value = "";
+    newYoutubeItems[0].value = "";
 
     setItems((prev) => ({ ...prev, youtube: newYoutubeItems }));
     toggleModal("youtube");
@@ -254,12 +279,22 @@ const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
         />
         <div className={styles.modalBox}>
-          <button
-            type="button"
-            className={`${styles.toolbarBtn} ${styles.link} ${editor.isActive("link") ? styles.active : null}`}
-            onClick={(event) => toggleModal("link", event)}
-          />
+          {editor.isActive("link") ? (
+            <button
+              type="button"
+              className={`${styles.toolbarBtn} ${styles.unlink} ${styles.active}`}
+              onClick={() => editor.chain().focus().unsetLink().run()}
+            />
+          ) : (
+            <button
+              ref={btnRefs.current.link}
+              type="button"
+              className={`${styles.toolbarBtn} ${styles.link}`}
+              onClick={(event) => toggleModal("link", event)}
+            />
+          )}
           <EditorDialog
+            buttonRef={btnRefs.current.link}
             isVisible={modals.link}
             items={items.link}
             closeVisible={() => toggleModal("link")}
@@ -269,11 +304,13 @@ const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
         </div>
         <div className={styles.modalBox}>
           <button
+            ref={btnRefs.current.image}
             type="button"
             className={`${styles.toolbarBtn} ${styles.image}`}
             onClick={(event) => toggleModal("image", event)}
           />
           <EditorDialog
+            buttonRef={btnRefs.current.image}
             isVisible={modals.image}
             items={items.image}
             closeVisible={() => toggleModal("image")}
@@ -287,11 +324,13 @@ const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
         </div>
         <div className={styles.modalBox}>
           <button
+            ref={btnRefs.current.youtube}
             type="button"
             className={`${styles.toolbarBtn} ${styles.youtube}`}
             onClick={(event) => toggleModal("youtube", event)}
           />
           <EditorDialog
+            buttonRef={btnRefs.current.youtube}
             isVisible={modals.youtube}
             items={items.youtube}
             closeVisible={() => toggleModal("youtube")}
@@ -301,15 +340,17 @@ const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
         </div>
         <div className={styles.modalBox}>
           <button
+            ref={btnRefs.current.table}
             type="button"
             className={`${styles.toolbarBtn} ${styles.table}`}
             onClick={(event) => toggleModal("table", event)}
           />
-          <EditorDialog
+          <TableDialog
+            buttonRef={btnRefs.current.table}
             isVisible={modals.table}
-            items={items.table}
-            closeVisible={() => toggleModal("table")}
-            onChange={(key, value) => changeValue("table", key, value)}
+            item={{ row: Number(items.table[0].value), col: Number(items.table[1].value) }}
+            onCloseVisible={() => toggleModal("table")}
+            onChange={handleTableChange}
             onSubmit={setTable}
           />
         </div>

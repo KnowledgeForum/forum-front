@@ -1,39 +1,38 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useRef } from "react";
 
 import styles from "./EditorDialog.module.scss";
+import useDialogCloseBoundary from "@/hooks/useDialogCloseBoundary";
 
 export type ModalItem = {
   key: string;
   title: string;
   value: string | File;
-  placeholder: string;
+  placeholder?: string;
   type?: string;
 };
 
 type ModalProps = {
   isVisible: boolean;
   items: ModalItem[];
+  buttonRef: React.RefObject<HTMLButtonElement>;
   onSubmit: () => void;
+  closeVisible: () => void;
   onChange?: (key: string, changedVal: string) => void;
   onChangeFile?: (key: string, file: File) => void;
-  closeVisible: () => void;
 };
 
-const EditorInputModal = ({ items, isVisible, onChange, onChangeFile, onSubmit, closeVisible }: ModalProps) => {
+const EditorInputModal = ({
+  items,
+  isVisible,
+  buttonRef,
+  onChange,
+  onChangeFile,
+  onSubmit,
+  closeVisible,
+}: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const handleVisible = useCallback(
-    (event: MouseEvent) => {
-      const modalInside = modalRef.current?.contains(event.target as Node);
-      if (modalInside) return;
-      if (!isVisible) return;
-
-      event.stopPropagation();
-      closeVisible();
-      document.body.removeEventListener("click", handleVisible);
-    },
-    [isVisible, closeVisible],
-  );
+  useDialogCloseBoundary({ isVisible, buttonRef, modalRef, onClose: closeVisible });
 
   const handleChange = useCallback(
     (key: string, changedVal: string) => {
@@ -52,18 +51,6 @@ const EditorInputModal = ({ items, isVisible, onChange, onChangeFile, onSubmit, 
   const handleSubmit = useCallback(() => {
     onSubmit();
   }, [onSubmit]);
-
-  useEffect(() => {
-    if (isVisible) {
-      document.body.addEventListener("click", handleVisible);
-    } else {
-      document.body.removeEventListener("click", handleVisible);
-    }
-
-    return () => {
-      document.body.removeEventListener("click", handleVisible);
-    };
-  }, [handleVisible, isVisible]);
 
   if (!isVisible) return null;
 

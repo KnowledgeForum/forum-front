@@ -33,10 +33,10 @@ const BoardDetail = () => {
 
   const fetchBoardDetail = useCallback(async () => {
     try {
-      await setTimeout(async () => {
-        const response = await BoardApi.fetchBoardDetail(boardId);
-        setBoard(response);
-      }, 1000);
+      // await setTimeout(async () => {
+      const response = await BoardApi.fetchBoardDetail(boardId);
+      setBoard(response);
+      // }, 1000);
     } catch (error) {
       console.error(error);
     }

@@ -4,7 +4,6 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import { Markdown } from "tiptap-markdown";
 import Underline from "@tiptap/extension-underline";
-import Youtube from "@tiptap/extension-youtube";
 import Table from "@tiptap/extension-table";
 import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
@@ -20,6 +19,7 @@ import { Indent } from "@/utils/indent";
 import CustomCodeBlockLowlight from "@/utils/codeBlockIndent";
 import BulletList from "@tiptap/extension-bullet-list";
 import ListItem from "@tiptap/extension-list-item";
+import { YoutubeResize } from "@/utils/youtubeResize";
 
 type EditorProps = {
   value: string;
@@ -39,10 +39,6 @@ const Editor = ({ value, isVisibleToolbar = true, placeholder, className, onChan
       Link.extend({ inclusive: false }).configure({
         openOnClick: false,
       }),
-      Youtube.configure({
-        autoplay: false,
-        interfaceLanguage: "ko",
-      }),
       Table.configure({
         resizable: true,
       }),
@@ -52,6 +48,7 @@ const Editor = ({ value, isVisibleToolbar = true, placeholder, className, onChan
       TableRow,
       TableHeader,
       TableCell,
+      YoutubeResize.configure({ autoplay: false, interfaceLanguage: "ko" }),
       ImageResize.configure({ allowBase64: true }),
       Placeholder.configure({ placeholder: placeholder }),
       Markdown,
