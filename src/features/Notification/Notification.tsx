@@ -42,7 +42,6 @@ const Notification = () => {
   const [hasUnRead, setHasUnRead] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const btnRef = useRef<HTMLButtonElement>(null);
   const infinityRef = useRef<HTMLDivElement>(null);
 
   const getNotificationMessage = useCallback((notification: Notification) => {
@@ -114,59 +113,59 @@ const Notification = () => {
   }, [data]);
 
   return (
-    <button className={classes.notificationBtn} onClick={handleClick} ref={btnRef}>
-      <img src={BellIcon} alt="알림 아이콘" width={20} height={20} />
-      {hasUnRead && <div className={classes.unread} />}
-      {isOpen && (
-        <Modal className={classes.modal} isOpen={isOpen} btnRef={btnRef} onClose={handleClose}>
-          <div className={classes.title}>알림</div>
-          {isLoading ? (
-            <Box display={"flex"} flexDirection={"column"} gap={"0.625rem"}>
-              {Array(count)
-                .fill(0)
-                .map((_, index) => (
-                  <Box>
-                    <Box display={"flex"} alignItems={"center"} key={index}>
-                      <Box marginRight={"0.3125rem"}>
-                        <Skeleton variant="circular" width={"2.25rem"} height={"2.25rem"} />
-                      </Box>
-                      <Box>
-                        <Skeleton variant="text" width={"5rem"} />
-                        <Skeleton variant="text" width={"5rem"} />
-                      </Box>
+    <div className={classes.notification}>
+      <button className={classes.notificationBtn} onClick={handleClick}>
+        <img src={BellIcon} alt="알림 아이콘" width={20} height={20} />
+        {hasUnRead && <div className={classes.unread} />}
+      </button>
+      <Modal className={classes.modal} isOpen={isOpen} onClose={handleClose}>
+        <div className={classes.title}>알림</div>
+        {isLoading ? (
+          <Box display={"flex"} flexDirection={"column"} gap={"0.625rem"}>
+            {Array(count)
+              .fill(0)
+              .map((_, index) => (
+                <Box key={index}>
+                  <Box display={"flex"} alignItems={"center"}>
+                    <Box marginRight={"0.3125rem"}>
+                      <Skeleton variant="circular" width={"2.25rem"} height={"2.25rem"} />
                     </Box>
-                    <Skeleton variant="text" width={"100%"} />
+                    <Box>
+                      <Skeleton variant="text" width={"5rem"} />
+                      <Skeleton variant="text" width={"5rem"} />
+                    </Box>
                   </Box>
-                ))}
-            </Box>
-          ) : (
-            <>
-              <div className={classes.container}>
-                {!data ? (
-                  <div className={classes.empty}>새로운 알림이 없습니다.</div>
-                ) : (
-                  data.pages.map((page) =>
-                    page.notifications.map((notification) => (
-                      <Link to={`/board/${notification.board.boardId}`} key={notification.notificationId}>
-                        <div className={classes.top}>
-                          <img src={notification.sender.profilePath} alt="프로필 이미지" />
-                          <div className={classes.info}>
-                            <div className={classes.username}>{notification.sender.username}</div>
-                            <div className={classes.time}>{getTimeAgo(notification.createdTime)}</div>
-                          </div>
+                  <Skeleton variant="text" width={"100%"} />
+                </Box>
+              ))}
+          </Box>
+        ) : (
+          <>
+            <div className={classes.container}>
+              {!data ? (
+                <div className={classes.empty}>새로운 알림이 없습니다.</div>
+              ) : (
+                data.pages.map((page) =>
+                  page.notifications.map((notification) => (
+                    <Link to={`/board/${notification.board.boardId}`} key={notification.notificationId}>
+                      <div className={classes.top}>
+                        <img src={notification.sender.profilePath} alt="프로필 이미지" />
+                        <div className={classes.info}>
+                          <div className={classes.username}>{notification.sender.username}</div>
+                          <div className={classes.time}>{getTimeAgo(notification.createdTime)}</div>
                         </div>
-                        <div className={classes.text}>{getNotificationMessage(notification)}</div>
-                      </Link>
-                    )),
-                  )
-                )}
-              </div>
-              <div ref={infinityRef} />
-            </>
-          )}
-        </Modal>
-      )}
-    </button>
+                      </div>
+                      <div className={classes.text}>{getNotificationMessage(notification)}</div>
+                    </Link>
+                  )),
+                )
+              )}
+            </div>
+            <div ref={infinityRef} />
+          </>
+        )}
+      </Modal>
+    </div>
   );
 };
 

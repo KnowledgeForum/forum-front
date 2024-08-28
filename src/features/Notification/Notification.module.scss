@@ -1,19 +1,23 @@
-.notificationBtn {
-  @include button($white-color, $background-color, 0.75rem 0.625rem);
-
+.notification {
   position: relative;
-  height: 100%;
-  font-weight: 400;
 
-  .unread {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 8px;
-    height: 8px;
-    border: 1px solid $background-color;
-    border-radius: 100px;
-    background-color: $primary-color;
+  .notificationBtn {
+    @include button($white-color, $background-color, 0.75rem 0.625rem);
+
+    position: relative;
+    height: 100%;
+    font-weight: 400;
+
+    .unread {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 8px;
+      height: 8px;
+      border: 1px solid $background-color;
+      border-radius: 100px;
+      background-color: $primary-color;
+    }
   }
 
   .modal {

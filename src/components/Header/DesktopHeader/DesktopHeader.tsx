@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import HomeSvg from "@assets/home.svg";
@@ -23,8 +23,6 @@ const DesktopHeader = () => {
   const { user, logout } = useUser();
   const router = useLocation();
   const navigate = useNavigate();
-
-  const btnRef = useRef<HTMLButtonElement>(null);
 
   const [keyword, setKeyword] = useState<string>("");
   const [isOpenProfile, setIsOpenProfile] = useState<boolean>(false);
@@ -105,41 +103,43 @@ const DesktopHeader = () => {
                 글쓰기
               </Link>
               <Notification />
-              <button className={classes.profile} ref={btnRef} onClick={handleProfile}>
-                <img src={user.profilePath} alt="유저 프로필 이미지" width={36} height={36} />
-              </button>
-              <Modal isOpen={isOpenProfile} btnRef={btnRef} onClose={handleClose}>
-                <div className={classes.profileModal}>
-                  <div className={classes.top}>
-                    <img
-                      src={user.profilePath}
-                      alt="유저 프로필 이미지"
-                      width={40}
-                      height={40}
-                      className={classes.profile}
-                    />
-                    <div className={classes.userInfo}>
-                      <div className={classes.username}>{user.nickname}</div>
-                      <div className={classes.email}>{user.email}</div>
+              <div className={classes.profileBox}>
+                <button className={classes.profile} onClick={handleProfile}>
+                  <img src={user.profilePath} alt="유저 프로필 이미지" width={36} height={36} />
+                </button>
+                <Modal isOpen={isOpenProfile} onClose={handleClose}>
+                  <div className={classes.profileModal}>
+                    <div className={classes.top}>
+                      <img
+                        src={user.profilePath}
+                        alt="유저 프로필 이미지"
+                        width={40}
+                        height={40}
+                        className={classes.profile}
+                      />
+                      <div className={classes.userInfo}>
+                        <div className={classes.username}>{user.nickname}</div>
+                        <div className={classes.email}>{user.email}</div>
+                      </div>
+                    </div>
+                    <div className={classes.linkBox}>
+                      <Link to={"/account"} className={classes.link}>
+                        <img src={AccountSvg} alt="계정 아이콘" />
+                        <span>내 정보</span>
+                      </Link>
+                      <button className={classes.link} onClick={handleLogout}>
+                        <img src={LogoutSvg} alt="로그아웃 아이콘" />
+                        <span>로그아웃</span>
+                      </button>
+                      <div className={classes.line} />
+                      <Link to={"/setting"} className={classes.link}>
+                        <img src={SettingSvg} alt="설정 아이콘" />
+                        <span>설정</span>
+                      </Link>
                     </div>
                   </div>
-                  <div className={classes.linkBox}>
-                    <Link to={"/account"} className={classes.link}>
-                      <img src={AccountSvg} alt="계정 아이콘" />
-                      <span>내 정보</span>
-                    </Link>
-                    <button className={classes.link} onClick={handleLogout}>
-                      <img src={LogoutSvg} alt="로그아웃 아이콘" />
-                      <span>로그아웃</span>
-                    </button>
-                    <div className={classes.line} />
-                    <Link to={"/setting"} className={classes.link}>
-                      <img src={SettingSvg} alt="설정 아이콘" />
-                      <span>설정</span>
-                    </Link>
-                  </div>
-                </div>
-              </Modal>
+                </Modal>
+              </div>
             </>
           ) : (
             <>
