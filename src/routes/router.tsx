@@ -13,6 +13,7 @@ import Login from "@/pages/Login/Login";
 import Callback from "@/pages/Callback/Callback";
 import Register from "@/pages/Register/Register";
 import Post from "@/pages/Post/Post";
+import Update from "@/pages/Update/Update";
 
 /**
  * router 파일은 어떤 주소에 어떤 pages/[filename].tsx가 띄워질지 정하는 파일입니다.
@@ -72,6 +73,16 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Post />,
+      },
+    ],
+  },
+  {
+    path: "/update/:boardId",
+    element: <CenterLayout />,
+    children: [
+      {
+        index: true,
+        element: <Update />,
       },
     ],
   },

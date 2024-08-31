@@ -15,7 +15,7 @@ type DraftProps = {
 };
 
 const Draft = ({ drafs, onClick, onDelete }: DraftProps) => {
-  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
   const [clickedDraftId, setClickedDraftId] = useState<number | null>(null);
 
