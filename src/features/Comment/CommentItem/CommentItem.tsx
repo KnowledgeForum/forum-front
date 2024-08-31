@@ -67,7 +67,7 @@ const CommentItem = ({ comment, boardId, isChild = false }: CommentItemProps) =>
 
   return (
     <>
-      <Dialog isOpen={isOpen} title="댓글을 삭제하시겠습니까?" onDelete={handleDelete} onCancel={handleCancel}>
+      <Dialog isOpen={isOpen} title="댓글을 삭제하시겠습니까?" onAction={handleDelete} onCancel={handleCancel}>
         <p>한 번 삭제된 댓글은 복구할 수 없습니다.</p>
         <p>삭제하시겠습니까?</p>
       </Dialog>

@@ -6,7 +6,8 @@ import { TextField } from "@mui/material";
 
 import classes from "./PostForm.module.scss";
 
-import { BoardType, RequestBoard, UpdateBoardDetail } from "@/types/board";
+import { BoardType, DraftBoardList, RequestBoard, UpdateBoardDetail } from "@/types/board";
+import { Tag } from "@/types/tag";
 
 import { BoardApi } from "@/api/board";
 
@@ -18,16 +19,17 @@ import Editor from "../Editor/Editor";
 import Select from "../Select/Select";
 import DragAndDrop from "../DragAndDrop/DragAndDrop";
 import Dialog from "../Dialog/Dialog";
+import Draft from "../Draft/Draft";
 
 import { checkAltValue } from "@/utils/doc";
-import { Tag } from "@/types/tag";
 
 type PostFormProps = {
+  postSuccess: boolean;
   onPost: (request: RequestBoard) => void;
   boardId?: number;
 };
 
-const PostForm = ({ onPost, boardId }: PostFormProps) => {
+const PostForm = ({ postSuccess, onPost, boardId }: PostFormProps) => {
   const navigate = useNavigate();
   const { showToast, ToastElement } = useToast();
   const { user, isLoaded } = useUser();
@@ -39,7 +41,27 @@ const PostForm = ({ onPost, boardId }: PostFormProps) => {
     },
     enabled: !!boardId,
   });
-  // TODO: 임시 저장한 게시글 가져오기
+  const { data: drafs } = useQuery<DraftBoardList | null>({
+    queryKey: ["drafts"],
+    initialData: null,
+    queryFn: async () => {
+      return await BoardApi.fetchDraftBoards();
+    },
+    enabled: !boardId,
+  });
+  const draftSummaries = useMemo(() => {
+    if (!drafs) {
+      return null;
+    }
+
+    return drafs.drafts.map((draft) => {
+      return {
+        draftId: draft.draftId,
+        title: draft.title,
+        createdTime: draft.createdTime,
+      };
+    });
+  }, [drafs]);
 
   const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
   const [request, setRequest] = useState<RequestBoard>({
@@ -58,6 +80,35 @@ const PostForm = ({ onPost, boardId }: PostFormProps) => {
   const handleBack = useCallback((event: MouseEvent) => {
     event.preventDefault();
     setIsOpenDialog(true);
+  }, []);
+
+  const handleDeleteDraft = useCallback((draftId: number) => {
+    // TODO: 임시 저장 삭제 API 호출
+    console.log("delete draft : ", draftId);
+  }, []);
+
+  const handleApplyDraft = useCallback(
+    (draftId: number) => {
+      const filteredDraft = drafs?.drafts.find((draft) => draft.draftId === draftId);
+      if (!filteredDraft) {
+        showToast.error("임시 저장된 게시글을 불러오는 중에 오류가 발생했습니다.");
+        return;
+      }
+
+      setRequest({
+        boardType: filteredDraft.boardType,
+        title: filteredDraft?.title || "",
+        content: filteredDraft?.content || "",
+        thumbnail: filteredDraft?.thumbnail || null,
+        imageIds: filteredDraft?.imageIds || [],
+        tags: filteredDraft?.tags || [],
+      });
+    },
+    [drafs?.drafts, showToast],
+  );
+
+  const handleBeforeUnload = useCallback((event: BeforeUnloadEvent) => {
+    event.preventDefault();
   }, []);
 
   const handleSaveDraft = useCallback(() => {
@@ -159,13 +210,21 @@ const PostForm = ({ onPost, boardId }: PostFormProps) => {
   }, [board, isLoaded]);
 
   useEffect(() => {
-    if (!boardId) {
-      const isAccept = window.confirm("임시 저장된 게시글이 있습니다. 불러오시겠습니까?");
-      if (isAccept) {
-        // TODO: 임시 저장된 게시글 : Request 연결
-      }
+    if (handleBeforeUnload) {
+      window.addEventListener("beforeunload", handleBeforeUnload);
     }
-  }, [boardId]);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [handleBeforeUnload]);
+
+  useEffect(() => {
+    if (postSuccess) {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      navigate("/");
+    }
+  }, [postSuccess, handleBeforeUnload, navigate]);
 
   if (!user && isLoaded) {
     navigate(`/login?redirect=${window.location.pathname}`);
@@ -185,7 +244,7 @@ const PostForm = ({ onPost, boardId }: PostFormProps) => {
         isOpen={isOpenDialog}
         title="뒤로 가기"
         confirmText="나가기"
-        onDelete={() => {
+        onAction={() => {
           setIsOpenDialog(false);
           navigate(-1);
         }}
@@ -194,6 +253,7 @@ const PostForm = ({ onPost, boardId }: PostFormProps) => {
         <p>게시글을 저장하지 않고 나가시겠습니까?</p>
       </Dialog>
       <form className={classes.form} onSubmit={handlePost}>
+        <Draft drafs={draftSummaries} onClick={handleApplyDraft} onDelete={handleDeleteDraft} />
         <Select
           label="토픽"
           value={request.boardType}
@@ -212,29 +272,17 @@ const PostForm = ({ onPost, boardId }: PostFormProps) => {
           required
         />
         <DragAndDrop thumbnail={request.thumbnail} onChange={(file: File | null) => handleChange("thumbnail", file)} />
-        {boardId ? (
-          isLoaded &&
-          request.content && (
-            <Editor
-              isVisibleToolbar
-              initialValue={request.content}
-              placeholder="내용을 입력해주세요."
-              onChange={(content: string) => handleChange("content", content)}
-              onChangeImage={handleImage}
-              className={classes.editor}
-            />
-          )
-        ) : (
+        {isLoaded && (
           <Editor
             isVisibleToolbar
-            initialValue=""
+            initialValue={request.content || ""}
             placeholder="내용을 입력해주세요."
             onChange={(content: string) => handleChange("content", content)}
             onChangeImage={handleImage}
             className={classes.editor}
           />
         )}
-        <TagSelect initialTags={board?.tags} onSelect={handleTags} />
+        <TagSelect initialTags={request.tags} onSelect={handleTags} />
         <div className={classes.btnBox}>
           <button type="button" className={classes.btn} onClick={handleBack}>
             취소

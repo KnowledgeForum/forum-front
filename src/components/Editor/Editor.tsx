@@ -21,6 +21,7 @@ import Toolbar from "./Toolbar/Toolbar";
 import { Indent } from "@/utils/indent";
 import CustomCodeBlockLowlight from "@/utils/codeBlockIndent";
 import { YoutubeResize } from "@/utils/youtubeResize";
+import { useEffect } from "react";
 
 type EditorProps = {
   initialValue: string;
@@ -68,10 +69,16 @@ const Editor = ({
       Indent,
     ],
     content: initialValue,
-    onUpdate({ editor }) {
+    onBlur({ editor }) {
       onChange(editor.getHTML());
     },
   });
+
+  useEffect(() => {
+    if (!editor) return;
+
+    editor.commands.setContent(initialValue);
+  }, [editor, initialValue]);
 
   if (!editor) return;
 

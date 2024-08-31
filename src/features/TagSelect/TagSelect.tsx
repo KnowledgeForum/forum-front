@@ -16,7 +16,7 @@ type TagSelectProps = {
 const TagSelect = ({ label = "태그 (1 ~ 3개)", initialTags, onSelect }: TagSelectProps) => {
   const [keyword, setKeyword] = useState<string>("");
   const [selectedTags, setSelectedTags] = useState<Tag[]>(initialTags || []);
-  const [open, setOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const { data: tags, isLoading } = useQuery<TagSearch>({
     queryKey: ["tags", keyword],
@@ -40,7 +40,6 @@ const TagSelect = ({ label = "태그 (1 ~ 3개)", initialTags, onSelect }: TagSe
         return;
       }
 
-      setSelectedTags([...value]);
       onSelect([...value]);
     },
     [onSelect],
@@ -49,7 +48,6 @@ const TagSelect = ({ label = "태그 (1 ~ 3개)", initialTags, onSelect }: TagSe
   const handleDelete = useCallback(
     (tag: Tag) => {
       const newTags = selectedTags.filter((item) => item.tagId !== tag.tagId);
-      setSelectedTags(newTags);
       onSelect(newTags);
     },
     [selectedTags, onSelect],
@@ -64,9 +62,9 @@ const TagSelect = ({ label = "태그 (1 ~ 3개)", initialTags, onSelect }: TagSe
   return (
     <Autocomplete
       multiple
-      open={open && selectedTags.length < 3}
-      onOpen={() => setOpen(true)}
-      onClose={() => setOpen(false)}
+      open={isOpen && selectedTags.length < 3}
+      onOpen={() => setIsOpen(true)}
+      onClose={() => setIsOpen(false)}
       readOnly={selectedTags.length >= 3}
       limitTags={3}
       noOptionsText="검색을 통해 태그를 추가해주세요."

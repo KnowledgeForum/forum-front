@@ -1,0 +1,57 @@
+.draft {
+  .btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.9375rem 0.625rem;
+    border-radius: 0.25rem;
+    background-color: $primary-light-color;
+    cursor: pointer;
+  }
+
+  .table {
+    width: 100%;
+    text-align: center;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    background-color: #2c353d;
+
+    th,
+    tbody tr:not(:last-child) {
+      font-weight: 600;
+      border-bottom: 1px solid #cecece;
+    }
+
+    tbody tr:hover {
+      background-color: #3a4a52;
+    }
+
+    th,
+    td {
+      padding: 0.9375rem;
+      vertical-align: middle;
+    }
+
+    td {
+      cursor: pointer;
+
+      &:nth-child(1) {
+        width: 50%;
+        text-align: left;
+      }
+
+      &:nth-child(2) {
+        width: 30%;
+      }
+
+      &:nth-child(3) {
+        width: 20%;
+      }
+    }
+
+    .delete {
+      fill: $red-color;
+      cursor: pointer;
+    }
+  }
+}

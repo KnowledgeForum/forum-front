@@ -18,8 +18,23 @@ export type Board = {
   createdTime: string;
 };
 
-export type UpdateBoardDetail = Omit<Board, "isLike" | "likeCount" | "viewCount" | "commentCount"> & {
+export type UpdateBoardDetail = Omit<Board, "uploader" | "isLike" | "likeCount" | "viewCount" | "commentCount"> & {
   imageIds: number[];
+};
+
+export type DraftBoard = {
+  draftId: number;
+  boardType: BoardType;
+  title: string | null;
+  content: string | null;
+  thumbnail: string | null;
+  tags: Tag[] | null;
+  imageIds: number[] | null;
+  createdTime: string;
+};
+
+export type DraftBoardList = {
+  drafts: DraftBoard[];
 };
 
 export type BoardItem = Pick<
