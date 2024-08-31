@@ -1,0 +1,33 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.875rem;
+  max-width: 44.8438rem;
+
+  .editor {
+    height: 21.25rem;
+
+    & > div {
+      height: 100%;
+    }
+  }
+
+  .btnBox {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.625rem;
+
+    .btn {
+      @include button;
+    }
+
+    .right {
+      display: flex;
+      gap: 0.625rem;
+
+      .post {
+        @include button($color: $white-color, $bg: $primary-light-color);
+      }
+    }
+  }
+}

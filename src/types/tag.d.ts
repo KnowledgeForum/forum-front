@@ -10,3 +10,7 @@ export type TagWithCount = {
 export type TagPopular = {
   tags: TagWithCount[];
 };
+
+export type TagSearch = {
+  tags: Tag[];
+};

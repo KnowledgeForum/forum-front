@@ -9,12 +9,17 @@ export type Board = {
   uploader: Uploader;
   title: string;
   content: string;
+  thumbnail: string | null;
   tags: Tag[];
   isLike: boolean;
   likeCount: number;
   viewCount: number;
   commentCount: number;
   createdTime: string;
+};
+
+export type UpdateBoardDetail = Omit<Board, "isLike" | "likeCount" | "viewCount" | "commentCount"> & {
+  imageIds: number[];
 };
 
 export type BoardItem = Pick<
@@ -40,4 +45,13 @@ export type IntroBoard = Pick<BoardItem, "boardId" | "thumbnail" | "title"> & {
 
 export type IntroBoardList = {
   boards: IntroBoard[];
+};
+
+export type RequestBoard = {
+  boardType: BoardType;
+  title: string;
+  content: string;
+  tags?: Tag[];
+  thumbnail?: File | string | null;
+  imageIds?: number[];
 };

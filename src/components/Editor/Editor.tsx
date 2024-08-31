@@ -10,6 +10,9 @@ import TableHeader from "@tiptap/extension-table-header";
 import TableRow from "@tiptap/extension-table-row";
 import ImageResize from "tiptap-extension-resize-image";
 import Placeholder from "@tiptap/extension-placeholder";
+import OrderedList from "@tiptap/extension-ordered-list";
+import BulletList from "@tiptap/extension-bullet-list";
+import ListItem from "@tiptap/extension-list-item";
 
 import classes from "./Editor.module.scss";
 
@@ -17,12 +20,10 @@ import Toolbar from "./Toolbar/Toolbar";
 
 import { Indent } from "@/utils/indent";
 import CustomCodeBlockLowlight from "@/utils/codeBlockIndent";
-import BulletList from "@tiptap/extension-bullet-list";
-import ListItem from "@tiptap/extension-list-item";
 import { YoutubeResize } from "@/utils/youtubeResize";
 
 type EditorProps = {
-  value: string;
+  initialValue: string;
   isVisibleToolbar?: boolean;
   placeholder?: string;
   className?: string;
@@ -30,11 +31,21 @@ type EditorProps = {
   onChangeImage?: (imageId: number) => void;
 };
 
-const Editor = ({ value, isVisibleToolbar = true, placeholder, className, onChange, onChangeImage }: EditorProps) => {
+const Editor = ({
+  initialValue,
+  isVisibleToolbar = true,
+  placeholder,
+  className,
+  onChange,
+  onChangeImage,
+}: EditorProps) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
         codeBlock: false,
+        bulletList: false,
+        orderedList: false,
+        listItem: false,
       }),
       Link.extend({ inclusive: false }).configure({
         openOnClick: false,
@@ -42,6 +53,7 @@ const Editor = ({ value, isVisibleToolbar = true, placeholder, className, onChan
       Table.configure({
         resizable: true,
       }),
+      OrderedList,
       BulletList,
       ListItem,
       Underline,
@@ -53,10 +65,9 @@ const Editor = ({ value, isVisibleToolbar = true, placeholder, className, onChan
       Placeholder.configure({ placeholder: placeholder }),
       Markdown,
       CustomCodeBlockLowlight,
-      ListItem,
       Indent,
     ],
-    content: value,
+    content: initialValue,
     onUpdate({ editor }) {
       onChange(editor.getHTML());
     },
