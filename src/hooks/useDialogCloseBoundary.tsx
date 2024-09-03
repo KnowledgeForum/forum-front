@@ -9,8 +9,11 @@ type useDialogCloseBoundaryProps = {
 const useDialogCloseBoundary = ({ isVisible, modalRef, onClose }: useDialogCloseBoundaryProps) => {
   const handleVisible = useCallback(
     (event: MouseEvent) => {
-      // 모달을 열기 위한 button 클릭 이벤트까지의 전파를 막기 위해 추가
-      event.stopPropagation();
+      // modal 여는 button을 클릭했다면
+      const btnInside = (event.target as HTMLElement).closest("button");
+      if (btnInside) {
+        return;
+      }
 
       const modalInside = modalRef.current?.contains(event.target as Node);
 

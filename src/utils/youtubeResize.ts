@@ -12,7 +12,8 @@ export const YoutubeResize = Youtube.extend({
         default: null,
       },
       style: {
-        default: "width: 100%; height: 100%; cursor: pointer; padding: 0; aspect-ratio: 404 / 279;",
+        default:
+          "width: 100%; height: auto; cursor: pointer; padding: 0; aspect-ratio: 404 / 279; pointer-events: none;",
       },
       title: {
         default: null,
@@ -104,7 +105,7 @@ export const YoutubeResize = Youtube.extend({
 
       const addIframeResizeElement = () => {
         const topContainer = document.createElement("div");
-        topContainer.style.cssText = "width: 100%; height: 15px; position: absolute; top: 0; left: 0; z-index: 1";
+        topContainer.style.cssText = "width: 100%; height: 15px; position: absolute; top: 0; left: 0; z-index: 1;";
 
         const bottomContainer = document.createElement("div");
         bottomContainer.style.cssText = "width: 100%; height: 15px; position: absolute; bottom: 0; left: 0; z-index: 1";
@@ -123,23 +124,18 @@ export const YoutubeResize = Youtube.extend({
 
         const resize = (e: MouseEvent) => {
           if (!isResizing) return;
+          e.stopPropagation();
 
-          const { clientX, clientY } = e;
-          const { top, left } = $container.getBoundingClientRect();
+          const { clientX } = e;
+          const { left } = $container.getBoundingClientRect();
           let newWidth = clientX - left;
-          let newHeight = clientY - top;
           const editorWidth = view.dom.clientWidth;
-          const editorHeight = view.dom.clientHeight;
 
           if (newWidth > editorWidth) {
             newWidth = editorWidth;
           }
-          if (newHeight > editorHeight) {
-            newHeight = editorHeight;
-          }
 
           $container.style.width = `${newWidth}px`;
-          $container.style.height = `${newHeight}px`;
         };
 
         const stopResize = () => {
@@ -157,6 +153,7 @@ export const YoutubeResize = Youtube.extend({
         });
       };
 
+      console.log(style);
       $iframe.setAttribute("style", style);
       $container.appendChild($iframe);
 

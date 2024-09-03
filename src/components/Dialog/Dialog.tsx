@@ -8,8 +8,9 @@ type DialogProps = {
   isOpen: boolean;
   title: string;
   children: ReactNode;
+  confirmText?: string;
   primaryColor?: string;
-  onDelete: () => void;
+  onAction: () => void;
   onCancel: () => void;
 };
 
@@ -22,7 +23,7 @@ const Transition = forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const Dialog = ({ isOpen, title, children, primaryColor, onDelete, onCancel }: DialogProps) => {
+const Dialog = ({ isOpen, title, children, confirmText = "삭제", primaryColor, onAction, onCancel }: DialogProps) => {
   return (
     <MuiDialog open={isOpen} TransitionComponent={Transition} keepMounted onClose={onCancel} className={classes.dialog}>
       <div className={classes.title}>{title}</div>
@@ -33,12 +34,12 @@ const Dialog = ({ isOpen, title, children, primaryColor, onDelete, onCancel }: D
         </button>
         <button
           className={classes.delete}
-          onClick={onDelete}
+          onClick={onAction}
           style={{
             color: primaryColor,
           }}
         >
-          삭제
+          {confirmText}
         </button>
       </div>
     </MuiDialog>

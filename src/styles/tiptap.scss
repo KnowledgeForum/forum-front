@@ -7,6 +7,8 @@
 .ProseMirror {
   min-height: 6.25rem;
   padding-bottom: 1.25rem;
+  white-space: normal !important;
+  word-break: break-word;
 }
 
 .tiptap .is-editor-empty:first-child::before {

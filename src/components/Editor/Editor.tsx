@@ -1,4 +1,6 @@
 import { useEditor, EditorContent } from "@tiptap/react";
+import { useEffect, useState } from "react";
+import { Selection } from "prosemirror-state";
 
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
@@ -17,12 +19,11 @@ import Toolbar from "./Toolbar/Toolbar";
 
 import { Indent } from "@/utils/indent";
 import CustomCodeBlockLowlight from "@/utils/codeBlockIndent";
-import BulletList from "@tiptap/extension-bullet-list";
-import ListItem from "@tiptap/extension-list-item";
 import { YoutubeResize } from "@/utils/youtubeResize";
+import ListItem from "@tiptap/extension-list-item";
 
 type EditorProps = {
-  value: string;
+  changeValue?: string;
   isVisibleToolbar?: boolean;
   placeholder?: string;
   className?: string;
@@ -30,11 +31,21 @@ type EditorProps = {
   onChangeImage?: (imageId: number) => void;
 };
 
-const Editor = ({ value, isVisibleToolbar = true, placeholder, className, onChange, onChangeImage }: EditorProps) => {
+const Editor = ({
+  changeValue = "",
+  isVisibleToolbar = true,
+  placeholder,
+  className,
+  onChange,
+  onChangeImage,
+}: EditorProps) => {
+  const [content, setContent] = useState<string>("");
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
         codeBlock: false,
+        listItem: false,
       }),
       Link.extend({ inclusive: false }).configure({
         openOnClick: false,
@@ -42,8 +53,6 @@ const Editor = ({ value, isVisibleToolbar = true, placeholder, className, onChan
       Table.configure({
         resizable: true,
       }),
-      BulletList,
-      ListItem,
       Underline,
       TableRow,
       TableHeader,
@@ -53,16 +62,52 @@ const Editor = ({ value, isVisibleToolbar = true, placeholder, className, onChan
       Placeholder.configure({ placeholder: placeholder }),
       Markdown,
       CustomCodeBlockLowlight,
-      ListItem,
       Indent,
+      ListItem,
     ],
-    content: value,
     onUpdate({ editor }) {
-      onChange(editor.getHTML());
+      setContent(editor.getHTML());
+    },
+    editorProps: {
+      handleDOMEvents: {
+        keydown: (view, event) => {
+          if (event.key === "Enter") {
+            const { state, dispatch } = view;
+            const { $head } = state.selection;
+            const isBlockquote = $head.node(-1).type.name === "blockquote";
+
+            // block quote일 경우에는 enter 시 blockquote 를 유지하고, 아닐 경우에는 줄바꿈을 한다.
+            if (isBlockquote) {
+              return true;
+            }
+
+            const tr = state.tr.setSelection(Selection.atEnd(state.doc));
+            dispatch(tr.scrollIntoView().insertText("\n"));
+          }
+
+          return false;
+        },
+      },
     },
   });
 
-  if (!editor) return;
+  useEffect(() => {
+    if (!editor) return;
+
+    onChange(content);
+  }, [editor, content, onChange]);
+
+  useEffect(() => {
+    if (!editor) return;
+    if (changeValue === editor.getHTML()) return;
+
+    editor.commands.setContent(changeValue);
+    setContent(changeValue);
+  }, [editor, changeValue]);
+
+  if (!editor) {
+    return;
+  }
 
   return (
     <div className={classes.editorBox}>

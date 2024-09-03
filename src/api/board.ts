@@ -1,4 +1,4 @@
-import { Board, BoardListWithType } from "@/types/board";
+import { Board, BoardListWithType, DraftBoardList, UpdateBoardDetail } from "@/types/board";
 
 import Bitcoin from "@assets/bitcoin.png";
 
@@ -500,6 +500,7 @@ public class Main {
     System.out.println(a + b);
   }
 }</code></pre>`,
+      thumbnail: null,
       tags: [
         { tagId: 1, tagName: "finace" },
         { tagId: 2, tagName: "bitcoin" },
@@ -510,6 +511,84 @@ public class Main {
       likeCount: 366545,
       commentCount: 30,
       createdTime: "2024-08-17 12:30:45",
+    };
+  },
+  fetchBoardDetailByUpdate: async (boardId: number): Promise<UpdateBoardDetail> => {
+    console.log("fetch Board Detail : ", boardId);
+
+    return {
+      boardId: 1,
+      boardType: "N",
+      title: "비트코인을 사용한 프로젝트 구성",
+      content: `<h3 style="margin-left: 0px !important">알고리즘 테스트 1에 대한 설명입니다.</h3><p style="margin-left: 0px !important">이번 알고리즘은 굉장히 쉬운 산수 문제입니다.</p><p style="margin-left: 0px !important">두 수를 입력받고 두 수의 합을 출력하면 되는 문제입니다.</p><p style="margin-left: 0px !important">예를 들어, 1 + 1은 2라는 결과 값이 나오면 됩니다.</p><p style="margin-left: 0px !important">테스트 케이스는 다음과 같습니다.</p><table><tbody><tr><td colspan="1" rowspan="1"><p style="margin-left: 0px !important"><strong>입력</strong></p></td><td colspan="1" rowspan="1" colwidth="628"><p style="margin-left: 0px !important"><strong>출력</strong></p></td></tr><tr><td colspan="1" rowspan="1"><p style="margin-left: 0px !important">1,1</p></td><td colspan="1" rowspan="1" colwidth="628"><p style="margin-left: 0px !important">2</p></td></tr><tr><td colspan="1" rowspan="1"><p style="margin-left: 0px !important">2,3</p></td><td colspan="1" rowspan="1" colwidth="628"><p style="margin-left: 0px !important">5</p></td></tr><tr><td colspan="1" rowspan="1"><p style="margin-left: 0px !important">4,5</p></td><td colspan="1" rowspan="1" colwidth="628"><p style="margin-left: 0px !important">9</p></td></tr><tr><td colspan="1" rowspan="1"><p style="margin-left: 0px !important">4,2</p></td><td colspan="1" rowspan="1" colwidth="628"><p style="margin-left: 0px !important">6</p></td></tr></tbody></table><hr><p style="margin-left: 0px !important">숫자를 입력받기 위해서는 Scanner를 사용하면 됩니다.</p><pre><code class="language-java">import java.util.Scanner;
+public class Main {
+  public static void main(String[] args) {
+    Scanner s = new Scanner(System.in);
+    int a = s.nextInt();
+  }
+}</code></pre><p style="margin-left: 0px !important">주의하실 점은 <u>import</u>를 꼭 해줘야 하는 겁니다!</p><p style="margin-left: 0px !important"></p><p style="margin-left: 0px !important">바로 정답을 보겠습니다.</p>
+<pre><code class="language-java">import java.util.Scanner;
+public class Main {
+  public static void main(String[] args) {
+    Scanner s = new Scanner(System.in);
+    int a = s.nextInt();
+    int b = s.nextInt();
+    System.out.println(a + b);
+  }
+}</code></pre>`,
+      thumbnail: Bitcoin,
+      tags: [
+        { tagId: 1, tagName: "finace" },
+        { tagId: 2, tagName: "bitcoin" },
+      ],
+      imageIds: [1, 2, 3],
+      createdTime: "2024-08-17 12:30:45",
+    };
+  },
+  fetchDraftBoards: async (): Promise<DraftBoardList> => {
+    return {
+      drafts: [
+        {
+          draftId: 1,
+          boardType: "N",
+          title: null,
+          content: `<h3 style="margin-left: 0px !important">알고리즘 테스트 1에 대한 설명입니다.</h3><p style="margin-left: 0px !important">이번 알고리즘은 굉장히 쉬운 산수 문제입니다.</p><p style="margin-left: 0px !important">두 수를 입력받고 두 수의 합을 출력하면 되는 문제입니다.</p><p style="margin-left: 0px !important">예를 들어, 1 + 1은 2라는 결과 값이 나오면 됩니다.</p><p style="margin-left: 0px !important">테스트 케이스는 다음과 같습니다.</p><table><tbody><tr><td colspan="1" rowspan="1"><p style="margin-left: 0px !important"><strong>입력</strong></p></td><td colspan="1" rowspan="1" colwidth="628"><p style="margin-left: 0px !important"><strong>출력</strong></p></td></tr><tr><td colspan="1" rowspan="1"><p style="margin-left: 0px !important">1,1</p></td><td colspan="1" rowspan="1" colwidth="628"><p style="margin-left: 0px !important">2</p></td></tr><tr><td colspan="1" rowspan="1"><p style="margin-left: 0px !important">2,3</p></td><td colspan="1" rowspan="1" colwidth="628"><p style="margin-left: 0px !important">5</p></td></tr><tr><td colspan="1" rowspan="1"><p style="margin-left: 0px !important">4,5</p></td><td colspan="1" rowspan="1" colwidth="628"><p style="margin-left: 0px !important">9</p></td></tr><tr><td colspan="1" rowspan="1"><p style="margin-left: 0px !important">4,2</p></td><td colspan="1" rowspan="1" colwidth="628"><p style="margin-left: 0px !important">6</p></td></tr></tbody></table><hr><p style="margin-left: 0px !important">숫자를 입력받기 위해서는 Scanner를 사용하면 됩니다.</p><pre><code class="language-java">import java.util.Scanner;
+
+public class Main {
+  public static void main(String[] args) {
+    Scanner s = new Scanner(System.in);
+    int a = s.nextInt();
+  }
+}</code></pre><p style="margin-left: 0px !important">주의하실 점은 <u>import</u>를 꼭 해줘야 하는 겁니다!</p><p style="margin-left: 0px !important"></p><p style="margin-left: 0px !important">바로 정답을 보겠습니다.</p><pre><code class="language-java">import java.util.Scanner;
+
+public class Main {
+  public static void main(String[] args) {
+    Scanner s = new Scanner(System.in);
+    int a = s.nextInt();
+    int b = s.nextInt();
+
+    System.out.println(a + b);
+  }
+}</code></pre>`,
+          thumbnail: null,
+          tags: [
+            { tagId: 1, tagName: "finace" },
+            { tagId: 2, tagName: "bitcoin" },
+          ],
+          imageIds: null,
+          createdTime: "2024-08-17 12:30:45",
+        },
+        {
+          draftId: 2,
+          boardType: "B",
+          title: "타이틀",
+          content: null,
+          thumbnail: "https://avatars.githubusercontent.com/seungyong",
+          tags: null,
+          imageIds: [1, 2, 3],
+          createdTime: "2024-08-15 09:30:45",
+        },
+      ],
     };
   },
   likeBoard: async (boardId: number) => {
