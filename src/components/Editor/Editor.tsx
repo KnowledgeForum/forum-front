@@ -1,5 +1,6 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import { useEffect, useState } from "react";
+import { Selection } from "prosemirror-state";
 
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
@@ -66,6 +67,27 @@ const Editor = ({
     ],
     onUpdate({ editor }) {
       setContent(editor.getHTML());
+    },
+    editorProps: {
+      handleDOMEvents: {
+        keydown: (view, event) => {
+          if (event.key === "Enter") {
+            const { state, dispatch } = view;
+            const { $head } = state.selection;
+            const isBlockquote = $head.node(-1).type.name === "blockquote";
+
+            // block quote일 경우에는 enter 시 blockquote 를 유지하고, 아닐 경우에는 줄바꿈을 한다.
+            if (isBlockquote) {
+              return true;
+            }
+
+            const tr = state.tr.setSelection(Selection.atEnd(state.doc));
+            dispatch(tr.scrollIntoView().insertText("\n"));
+          }
+
+          return false;
+        },
+      },
     },
   });
 
