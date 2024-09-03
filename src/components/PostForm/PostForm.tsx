@@ -165,19 +165,12 @@ const PostForm = ({ postSuccess, onPost, boardId }: PostFormProps) => {
 
   const handleChange = useCallback(
     <K extends keyof Omit<RequestBoard, "imageIds" | "tagIds">>(key: K, value: RequestBoard[K]) => {
-      let filteredImageIds = undefined;
-
-      if (key === "content") {
-        filteredImageIds = request.imageIds?.filter((id) => checkAltValue(request.content, id));
-      }
-
       setRequest((prev) => ({
         ...prev,
         [key]: value,
-        imageIds: filteredImageIds ? [...filteredImageIds] : prev.imageIds,
       }));
     },
-    [request.content, request.imageIds],
+    [],
   );
 
   const handleTags = useCallback((tags: Tag[]) => {
@@ -187,16 +180,36 @@ const PostForm = ({ postSuccess, onPost, boardId }: PostFormProps) => {
     }));
   }, []);
 
-  const handleImage = useCallback(
-    (imageId: number) => {
-      const filteredImageIds = request.imageIds?.filter((id) => checkAltValue(request.content, id));
+  const getUserImage = useCallback(() => {
+    const filteredImageIds = request.imageIds?.filter((id) => checkAltValue(request.content, id));
+    return filteredImageIds;
+  }, [request.content, request.imageIds]);
 
-      setRequest((prev) => ({
-        ...prev,
-        imageIds: filteredImageIds ? [...filteredImageIds, imageId] : [...(prev.imageIds || []), imageId],
-      }));
+  const handleImage = useCallback(
+    (imageId?: number) => {
+      if (imageId) {
+        const filteredImageIds = getUserImage();
+
+        setRequest((prev) => ({
+          ...prev,
+          imageIds: filteredImageIds ? [...filteredImageIds, imageId] : [...(prev.imageIds || []), imageId],
+        }));
+      } else {
+        setRequest((prev) => ({
+          ...prev,
+          imageIds: getUserImage(),
+        }));
+      }
     },
-    [request.content, request.imageIds],
+    [getUserImage],
+  );
+
+  const handleContentChange = useCallback(
+    (content: string) => {
+      handleImage();
+      handleChange("content", content);
+    },
+    [handleChange],
   );
 
   useEffect(() => {
@@ -282,7 +295,7 @@ const PostForm = ({ postSuccess, onPost, boardId }: PostFormProps) => {
             isVisibleToolbar
             changeValue={changeContent}
             placeholder="내용을 입력해주세요."
-            onChange={(content: string) => handleChange("content", content)}
+            onChange={handleContentChange}
             onChangeImage={handleImage}
             className={classes.editor}
           />
