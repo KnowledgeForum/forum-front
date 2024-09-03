@@ -1,4 +1,4 @@
-import { useEditor, EditorContent, mergeAttributes } from "@tiptap/react";
+import { useEditor, EditorContent } from "@tiptap/react";
 import { useEffect, useState } from "react";
 import { Selection } from "prosemirror-state";
 
@@ -12,6 +12,7 @@ import TableHeader from "@tiptap/extension-table-header";
 import TableRow from "@tiptap/extension-table-row";
 import ImageResize from "tiptap-extension-resize-image";
 import Placeholder from "@tiptap/extension-placeholder";
+import ListItem from "@tiptap/extension-list-item";
 
 import classes from "./Editor.module.scss";
 
@@ -20,7 +21,6 @@ import Toolbar from "./Toolbar/Toolbar";
 import { Indent } from "@/utils/indent";
 import CustomCodeBlockLowlight from "@/utils/codeBlockIndent";
 import { YoutubeResize } from "@/utils/youtubeResize";
-import ListItem from "@tiptap/extension-list-item";
 
 type EditorProps = {
   changeValue?: string;

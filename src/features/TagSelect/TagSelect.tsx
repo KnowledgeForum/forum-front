@@ -40,6 +40,7 @@ const TagSelect = ({ label = "태그 (1 ~ 3개)", initialTags, onSelect }: TagSe
         return;
       }
 
+      setSelectedTags([...value]);
       onSelect([...value]);
     },
     [onSelect],
@@ -48,6 +49,8 @@ const TagSelect = ({ label = "태그 (1 ~ 3개)", initialTags, onSelect }: TagSe
   const handleDelete = useCallback(
     (tag: Tag) => {
       const newTags = selectedTags.filter((item) => item.tagId !== tag.tagId);
+
+      setSelectedTags(newTags);
       onSelect(newTags);
     },
     [selectedTags, onSelect],
@@ -72,7 +75,7 @@ const TagSelect = ({ label = "태그 (1 ~ 3개)", initialTags, onSelect }: TagSe
       loading={isLoading}
       value={selectedTags}
       onChange={handleTagChange}
-      options={tags ? tags.tags : []}
+      options={tags?.tags || []}
       getOptionLabel={(option) => option.tagName}
       isOptionEqualToValue={(option: Tag, value: Tag) => option.tagId === value.tagId}
       // 가져온 검색 값을 다 보여주기 위함.
