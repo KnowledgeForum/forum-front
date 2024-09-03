@@ -266,19 +266,13 @@ const Toolbar = ({ editor, onChangeImage }: ToolbarProps) => {
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
         />
         <div className={styles.modalBox}>
-          {editor.isActive("link") ? (
-            <button
-              type="button"
-              className={`${styles.toolbarBtn} ${styles.unlink} ${styles.active}`}
-              onClick={() => editor.chain().focus().unsetLink().run()}
-            />
-          ) : (
-            <button
-              type="button"
-              className={`${styles.toolbarBtn} ${styles.link}`}
-              onClick={() => toggleModal("link")}
-            />
-          )}
+          <button
+            type="button"
+            className={`${styles.toolbarBtn} ${styles.unlink} ${editor.isActive("link") ? styles.active : null}`}
+            onClick={
+              editor.isActive("link") ? () => editor.chain().focus().unsetLink().run() : () => toggleModal("link")
+            }
+          />
           <EditorDialog
             isVisible={modals.link}
             items={items.link}

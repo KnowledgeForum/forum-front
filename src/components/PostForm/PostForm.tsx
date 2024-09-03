@@ -69,6 +69,7 @@ const PostForm = ({ postSuccess, onPost, boardId }: PostFormProps) => {
     title: "",
     content: "",
   });
+  const [changeContent, setChangeContent] = useState<string>("");
 
   const topics: { value: BoardType; label: string }[] = useMemo(() => {
     return [
@@ -103,6 +104,8 @@ const PostForm = ({ postSuccess, onPost, boardId }: PostFormProps) => {
         imageIds: filteredDraft?.imageIds || [],
         tags: filteredDraft?.tags || [],
       });
+
+      setChangeContent(filteredDraft.content || "");
     },
     [drafs?.drafts, showToast],
   );
@@ -206,6 +209,8 @@ const PostForm = ({ postSuccess, onPost, boardId }: PostFormProps) => {
         imageIds: board.imageIds,
         tags: board.tags,
       });
+
+      setChangeContent(board.content);
     }
   }, [board, isLoaded]);
 
@@ -275,7 +280,7 @@ const PostForm = ({ postSuccess, onPost, boardId }: PostFormProps) => {
         {isLoaded && (
           <Editor
             isVisibleToolbar
-            initialValue={request.content || ""}
+            changeValue={changeContent}
             placeholder="내용을 입력해주세요."
             onChange={(content: string) => handleChange("content", content)}
             onChangeImage={handleImage}

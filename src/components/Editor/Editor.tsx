@@ -1,4 +1,5 @@
 import { useEditor, EditorContent } from "@tiptap/react";
+import { useEffect, useState } from "react";
 
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
@@ -10,9 +11,6 @@ import TableHeader from "@tiptap/extension-table-header";
 import TableRow from "@tiptap/extension-table-row";
 import ImageResize from "tiptap-extension-resize-image";
 import Placeholder from "@tiptap/extension-placeholder";
-import OrderedList from "@tiptap/extension-ordered-list";
-import BulletList from "@tiptap/extension-bullet-list";
-import ListItem from "@tiptap/extension-list-item";
 
 import classes from "./Editor.module.scss";
 
@@ -21,10 +19,10 @@ import Toolbar from "./Toolbar/Toolbar";
 import { Indent } from "@/utils/indent";
 import CustomCodeBlockLowlight from "@/utils/codeBlockIndent";
 import { YoutubeResize } from "@/utils/youtubeResize";
-import { useEffect } from "react";
+import ListItem from "@tiptap/extension-list-item";
 
 type EditorProps = {
-  initialValue: string;
+  changeValue?: string;
   isVisibleToolbar?: boolean;
   placeholder?: string;
   className?: string;
@@ -33,19 +31,19 @@ type EditorProps = {
 };
 
 const Editor = ({
-  initialValue,
+  changeValue = "",
   isVisibleToolbar = true,
   placeholder,
   className,
   onChange,
   onChangeImage,
 }: EditorProps) => {
+  const [content, setContent] = useState<string>("");
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
         codeBlock: false,
-        bulletList: false,
-        orderedList: false,
         listItem: false,
       }),
       Link.extend({ inclusive: false }).configure({
@@ -54,9 +52,6 @@ const Editor = ({
       Table.configure({
         resizable: true,
       }),
-      OrderedList,
-      BulletList,
-      ListItem,
       Underline,
       TableRow,
       TableHeader,
@@ -67,20 +62,30 @@ const Editor = ({
       Markdown,
       CustomCodeBlockLowlight,
       Indent,
+      ListItem,
     ],
-    content: initialValue,
-    onBlur({ editor }) {
-      onChange(editor.getHTML());
+    onUpdate({ editor }) {
+      setContent(editor.getHTML());
     },
   });
 
   useEffect(() => {
     if (!editor) return;
 
-    editor.commands.setContent(initialValue);
-  }, [editor, initialValue]);
+    onChange(content);
+  }, [editor, content, onChange]);
 
-  if (!editor) return;
+  useEffect(() => {
+    if (!editor) return;
+    if (changeValue === editor.getHTML()) return;
+
+    editor.commands.setContent(changeValue);
+    setContent(changeValue);
+  }, [editor, changeValue]);
+
+  if (!editor) {
+    return;
+  }
 
   return (
     <div className={classes.editorBox}>
