@@ -1,46 +1,19 @@
-import { useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
+import Vectersvg from "@/assets/Vector 17.svg";
 import classes from "./EmailVerifyLayout.module.scss";
 
-type EmailData = {
-  title: string;
-  description: string;
-  placeholder: string;
-  buttonText: string;
-};
-
 type EmailVerifyLayoutProps = {
-  children?: React.ReactNode;
-  emailData: EmailData;
+  children: React.ReactNode;
 };
 
-const EmailVerifyLayout = ({ children, emailData }: EmailVerifyLayoutProps) => {
-  const navigate = useNavigate();
-
-  const EmailVerifyClick = () => {
-    navigate("/email/verify/code"); // 경로로 이동
-  };
-
+const EmailVerifyLayout = ({ children }: EmailVerifyLayoutProps) => {
   return (
-    <div className={classes.layout}>
-      <div className={classes.top}>
-        <div className={classes.title}>{emailData.title}</div>
-        <div className={classes.description}>{emailData.description}</div>
+    <div className={classes.container}>
+      <div className={classes.layout}>
+        <img src={Vectersvg} alt="로고 이미지" width={25} height={25}></img>
+        <Outlet />
+        {children}
       </div>
-
-      <div className={classes.input}>
-        <input
-          type="email"
-          //value = {email}
-          placeholder={emailData.placeholder}
-        ></input>
-      </div>
-
-      <button onClick={EmailVerifyClick}>
-        <div className={classes.button}>{emailData.buttonText}</div>
-      </button>
-      {children}
-      <Outlet />
     </div>
   );
 };
