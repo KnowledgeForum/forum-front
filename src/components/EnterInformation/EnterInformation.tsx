@@ -1,3 +1,4 @@
+import { useState } from "react";
 import classes from "./EnterInformation.module.scss";
 
 type EnterInformationProps = {
@@ -17,6 +18,8 @@ const EnterInformation = ({
   inputType,
   onButtonClick,
 }: EnterInformationProps) => {
+  const [inputType, setinputType] = useState<string>();
+
   return (
     <div className={classes.contents}>
       <div className={classes.title}>{title}</div>
