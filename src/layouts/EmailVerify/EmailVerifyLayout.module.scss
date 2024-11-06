@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  .layout {
+    width: 49.0625rem;
+    height: 19.75rem;
+    border-radius: 1rem;
+    gap: $border-radius;
+    background-color: $background-light-color;
+    padding: 2.1875rem 1.875rem;
+    text-align: center;
+    margin: auto;
+  }
+}

@@ -3,6 +3,9 @@ import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../layouts/Main/MainLayout";
 import CenterLayout from "@/layouts/Center/CenterLayout";
 
+import EmailVerify from "../pages/EmaillVerify/EmailVerify";
+import EmailVerifyCode from "../pages/EmailVerifyCode/EmailVerifyCode";
+
 import Main from "@/pages/Main/Main";
 import News from "@/pages/News/News";
 import Follow from "@/pages/Follow/Follow";
@@ -94,6 +97,14 @@ const router = createBrowserRouter([
         element: <Callback />,
       },
     ],
+  },
+  {
+    path: "/email/verify",
+    element: <EmailVerify />,
+  },
+  {
+    path: "/email/verify/code",
+    element: <EmailVerifyCode />,
   },
 ]);
 
