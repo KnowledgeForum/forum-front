@@ -1,9 +1,19 @@
+import { useState } from "react";
 import EmailVerifyLayout from "@/layouts/EmailVerify/EmailVerifyLayout";
 import EnterInformation from "@/components/EnterInformation/EnterInformation";
 
 const EmailVerifyCode = () => {
+  const [codeInput, setCodeInput] = useState<string>("");
+
   const codeButtonClick = () => {
-    console.log();
+    const codeRegExp = /^[A-Za-z0-9]{6}$/;
+    const isCodeValid = codeRegExp.test(codeInput);
+    console.log("click:", codeInput);
+    console.log("이메일 유효성 검사 : ", isCodeValid);
+  };
+
+  const handleCodeInput = (value: string) => {
+    setCodeInput(value);
   };
 
   return (
@@ -15,6 +25,7 @@ const EmailVerifyCode = () => {
         buttonText="이메일 변경"
         inputType="text"
         onButtonClick={codeButtonClick}
+        onChange={handleCodeInput}
       />
     </EmailVerifyLayout>
   );

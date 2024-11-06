@@ -8,6 +8,7 @@ type EnterInformationProps = {
   buttonText: string;
   inputType: string;
   onButtonClick: () => void;
+  onChange: (value: string) => void;
 };
 
 const EnterInformation = ({
@@ -17,8 +18,14 @@ const EnterInformation = ({
   buttonText,
   inputType,
   onButtonClick,
+  onChange,
 }: EnterInformationProps) => {
-  const [inputType, setinputType] = useState<string>();
+  const [inputValue, setInputValue] = useState<string>("");
+
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+    onChange(e.target.value);
+  };
 
   return (
     <div className={classes.contents}>
@@ -26,7 +33,7 @@ const EnterInformation = ({
       <div className={classes.description}>{description}</div>
 
       <div className={classes.input}>
-        <input type={inputType} placeholder={placeholder}></input>
+        <input type={inputType} placeholder={placeholder} value={inputValue} onChange={handleChangeInput}></input>
       </div>
 
       <button onClick={onButtonClick} className={classes.button}>
