@@ -1,0 +1,10 @@
+.editorBox {
+  display: flex;
+  flex-direction: column;
+
+  .editor {
+    padding: 1.25rem;
+    background-color: #2c353d;
+    border-radius: $border-half-radius;
+  }
+}

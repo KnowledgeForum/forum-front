@@ -1,0 +1,7 @@
+.button {
+  @include button;
+}
+
+.active {
+  background-color: $primary-color;
+}

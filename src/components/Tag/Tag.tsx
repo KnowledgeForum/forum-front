@@ -1,15 +1,15 @@
-import { Tag } from "@/types/tag";
+import { Tag as TagType } from "@/types/tag";
 
-import classes from "./TagSlider.module.scss";
+import classes from "./Tag.module.scss";
 
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
-type TagSliderProps = {
-  tags: Tag[];
+type TagProps = {
+  tags: TagType[];
 };
 
-const TagSlider = ({ tags }: TagSliderProps) => {
+const Tag = ({ tags }: TagProps) => {
   const navigate = useNavigate();
 
   const moveTag = useCallback(
@@ -46,4 +46,4 @@ const TagSlider = ({ tags }: TagSliderProps) => {
   );
 };
 
-export default TagSlider;
+export default Tag;

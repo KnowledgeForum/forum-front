@@ -1,0 +1,8 @@
+.comment {
+  display: flex;
+  flex-direction: column;
+  gap: 1.875rem;
+  padding: 1.25rem;
+  border-radius: $border-radius;
+  background-color: $background-light-color;
+}

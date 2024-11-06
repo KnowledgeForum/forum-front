@@ -1,4 +1,4 @@
-import { TagPopular } from "@/types/tag";
+import { TagWithCount } from "@/types/tag";
 
 import JavascriptIcon from "@/assets/javascript-tag.svg";
 import BitcoinIcon from "@/assets/bitcoin-tag.svg";
@@ -35,7 +35,7 @@ const tagThemes: { [key: string]: { color: string; icon: string } } = {
   },
 } as const;
 
-export const getTagTheme = (tag: TagPopular) => {
+export const getTagTheme = (tag: TagWithCount) => {
   if (tagThemes[tag.tagName]) {
     return tagThemes[tag.tagName];
   }

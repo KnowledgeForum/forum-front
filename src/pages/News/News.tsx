@@ -1,17 +1,12 @@
-import { Link } from "react-router-dom";
+import { BoardApi } from "@/api/board";
 
-import classes from "./News.module.scss";
-
-/**
- * pages 폴더는 각 페이지를 모아놓은 폴더입니다.
- */
+import InfinityScrollBoard from "@/features/InfinityScrollBoard/InfinityScrollBoard";
 
 const News = () => {
+  const count = 5;
+
   return (
-    <>
-      <div className={classes.news}>News Page</div>
-      <Link to="/">Main 페이지</Link>
-    </>
+    <InfinityScrollBoard queryKey={["recentBoards", count]} fetchFunction={BoardApi.fetchRecentNews} count={count} />
   );
 };
 

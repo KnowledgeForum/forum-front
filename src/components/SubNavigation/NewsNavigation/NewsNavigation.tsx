@@ -7,7 +7,7 @@ import AsideLayout from "@/layouts/Aside/AsideLayout";
 import Link from "@/components/SubNavigation/Link/Link";
 
 type NewsNavigationProps = {
-  unReadCount: number;
+  unReadCount?: number;
 };
 
 const NewsNavigation = ({ unReadCount }: NewsNavigationProps) => {
