@@ -1,30 +1,24 @@
-import { useState } from "react";
 import classes from "./EnterInformation.module.scss";
 
 type EnterInformationProps = {
   title: string;
   description: string;
-  placeholder: string;
   buttonText: string;
-  inputType: string;
   onButtonClick: () => void;
-  onChange: (value: string) => void;
+  isButtonDisabled?: boolean; // 추가: 버튼 비활성화 여부
+  children?: React.ReactNode;
 };
 
 const EnterInformation = ({
   title,
   description,
-  placeholder,
   buttonText,
-  inputType,
   onButtonClick,
-  onChange,
+  isButtonDisabled = false,
+  children,
 }: EnterInformationProps) => {
-  const [inputValue, setInputValue] = useState<string>("");
-
-  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-    onChange(e.target.value);
+  const handleButtonClick = () => {
+    onButtonClick();
   };
 
   return (
@@ -32,11 +26,13 @@ const EnterInformation = ({
       <div className={classes.title}>{title}</div>
       <div className={classes.description}>{description}</div>
 
-      <div className={classes.input}>
-        <input type={inputType} placeholder={placeholder} value={inputValue} onChange={handleChangeInput}></input>
-      </div>
+      <div className={classes.input}>{children}</div>
 
-      <button onClick={onButtonClick} className={classes.button}>
+      <button
+        onClick={handleButtonClick}
+        className={`${classes.button} ${isButtonDisabled ? classes.inactiveButton : classes.activeButton}`}
+        disabled={isButtonDisabled} // 버튼 비활성화 상태를 isButtonDisabled로 제어
+      >
         {buttonText}
       </button>
     </div>
