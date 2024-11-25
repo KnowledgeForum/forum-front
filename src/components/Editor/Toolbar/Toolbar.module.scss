@@ -1,0 +1,116 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 0.3125rem 0.625rem;
+  border-bottom: 1px solid #dddddd;
+  background-color: $background-color;
+
+  .itemBox {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    .modalBox {
+      position: relative;
+      width: 1.875rem;
+      height: 1.875rem;
+      margin-right: 0.625rem;
+    }
+
+    .toolbarBtn {
+      width: 1.875rem;
+      height: 1.875rem;
+      background-size: 1.625rem;
+      background-repeat: no-repeat;
+      background-position: center;
+
+      &:not(:last-child) {
+        margin-right: 0.625rem;
+      }
+    }
+
+    .active {
+      background-color: $primary-light-color;
+    }
+  }
+
+  .line {
+    width: 0.0625rem;
+    height: 1.5625rem;
+    margin: 0 0.9375rem;
+    background-color: #dddddd;
+  }
+}
+
+.h1 {
+  background-image: url("/src/assets/editor-h1.svg");
+}
+
+.h2 {
+  background-image: url("/src/assets/editor-h2.svg");
+}
+
+.h3 {
+  background-image: url("/src/assets/editor-h3.svg");
+}
+
+.bold {
+  background-image: url("/src/assets/editor-bold.svg");
+}
+
+.italic {
+  background-image: url("/src/assets/editor-italic.svg");
+}
+
+.underline {
+  background-image: url("/src/assets/editor-underline.svg");
+}
+
+.strike {
+  background-image: url("/src/assets/editor-strike.svg");
+}
+
+.bulleted {
+  background-size: 1.5rem !important;
+  background-image: url("/src/assets/editor-list-bulleted.svg");
+}
+
+.numbered {
+  background-size: 1.5rem !important;
+  background-image: url("/src/assets/editor-list-numbered.svg");
+}
+
+.quote {
+  background-image: url("/src/assets/editor-quote.svg");
+}
+
+.link {
+  background-image: url("/src/assets/editor-link.svg");
+}
+
+.unlink {
+  background-image: url("/src/assets/editor-unlink.svg");
+}
+
+.image {
+  background-image: url("/src/assets/editor-image.svg");
+}
+
+.youtube {
+  background-image: url("/src/assets/editor-youtube.svg");
+}
+
+.table {
+  background-image: url("/src/assets/editor-table.svg");
+}
+
+.newline {
+  background-image: url("/src/assets/editor-line.svg");
+}
+
+@include mobile {
+  .line {
+    margin: 0 0.3125rem !important;
+  }
+}

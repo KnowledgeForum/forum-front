@@ -1,0 +1,16 @@
+.centerTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .desc {
+    color: #97989d;
+    font-size: 0.875rem;
+  }
+}

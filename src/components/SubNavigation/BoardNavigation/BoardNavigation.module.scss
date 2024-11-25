@@ -1,0 +1,31 @@
+.ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0 0.625rem;
+
+  .title {
+    font-weight: bold;
+  }
+
+  .item {
+    display: flex;
+    gap: 0.9375rem;
+
+    .thumbnail {
+      width: 3.625rem;
+      height: 3.625rem;
+      border-radius: 4px;
+    }
+
+    .title {
+      font-size: 0.875rem;
+      font-weight: bold;
+    }
+
+    .nickname {
+      font-size: 0.75rem;
+      color: #97989d;
+    }
+  }
+}

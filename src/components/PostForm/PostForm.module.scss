@@ -1,0 +1,41 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.875rem;
+  min-width: 44.8438rem;
+  max-width: 44.8438rem;
+
+  .editor {
+    min-height: 21.25rem;
+
+    & > div {
+      min-height: 21.25rem;
+    }
+  }
+
+  .btnBox {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.625rem;
+
+    .btn {
+      @include button;
+    }
+
+    .right {
+      display: flex;
+      gap: 0.625rem;
+
+      .post {
+        @include button($color: $white-color, $bg: $primary-light-color);
+      }
+    }
+  }
+}
+
+@media (max-width: 800px) {
+  .form {
+    min-width: 100%;
+    max-width: 100%;
+  }
+}

@@ -1,0 +1,49 @@
+.modal {
+  position: absolute;
+  padding: 0.9375rem 1.25rem;
+  border-radius: 0.5rem;
+  background-color: #181f25;
+  box-shadow: 0 0.625rem 1.25rem 0 rgba(0, 0, 0, 0.2);
+  z-index: 999;
+
+  .cell {
+    min-width: 1.5625rem;
+    height: 1.5625rem;
+    border: 1px solid $placeholder-color;
+    cursor: pointer;
+  }
+}
+
+.hover {
+  border: 1px solid $primary-color !important;
+}
+
+.text {
+  width: 100%;
+  margin-top: 0.625rem;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+@include tablet-vertical {
+  .modal {
+    right: 0;
+  }
+}
+
+@media (min-width: 660px) and (max-width: $breakpoint-mobile) {
+  .modal {
+    right: 0;
+    padding: 0.625rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    min-width: 0 !important;
+  }
+}

@@ -1,0 +1,51 @@
+:root {
+  color: $white-color;
+  background-color: $background-color;
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  font-family: "Noto Sans KR", system-ui, Avenir, Helvetica, Arial, sans-serif !important;
+  font-size: 1rem;
+  font-weight: 400;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  line-height: 1.2 !important;
+}
+
+button {
+  background: inherit;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  overflow: visible;
+  cursor: pointer;
+}
+
+input {
+  background: inherit;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+a {
+  color: $white-color;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+}

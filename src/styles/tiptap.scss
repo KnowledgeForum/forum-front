@@ -1,0 +1,163 @@
+/* tiptab editor */
+.ProseMirror-focused {
+  border: none !important;
+  outline: none !important;
+}
+
+.ProseMirror {
+  min-height: 6.25rem;
+  padding-bottom: 1.25rem;
+  white-space: normal !important;
+  word-break: break-word;
+}
+
+.tiptap .is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  font-size: 0.875rem;
+}
+
+.tiptap {
+  h1,
+  h2,
+  h3 {
+    padding: 0.625rem 0;
+    font-weight: bold;
+  }
+
+  h1 {
+    font-size: xx-large;
+  }
+
+  h2 {
+    font-size: x-large;
+  }
+
+  h3 {
+    font-size: large;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+
+  i,
+  em {
+    font-style: italic;
+  }
+
+  p {
+    padding: 0.25rem 0;
+    color: #e1e9ed;
+  }
+
+  pre {
+    background: #0d0d0d;
+    border-radius: 0.5rem;
+    font-family: inherit;
+    margin: 1rem 0;
+    padding: 1rem;
+    line-height: 1.6rem;
+
+    code {
+      background: none;
+      font-size: 1rem;
+      padding: 0;
+    }
+
+    .hljs {
+      padding: 0 !important;
+    }
+  }
+
+  ul,
+  ol {
+    padding: 0 1rem;
+    margin: 0.875rem 1rem 0.875rem 0.4rem;
+
+    ul,
+    ol {
+      margin: 0;
+    }
+
+    li p {
+      margin-top: 0.25em;
+      margin-bottom: 0.25em;
+    }
+  }
+
+  ul > li {
+    list-style: disc;
+
+    li {
+      list-style: circle;
+    }
+  }
+
+  ol > li {
+    list-style: decimal;
+  }
+
+  blockquote {
+    border-left: 3px solid #6d6d6f;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0.625rem;
+  }
+
+  a {
+    text-decoration: underline;
+    color: #1682fd;
+  }
+
+  iframe {
+    padding: 0.625rem 0;
+  }
+
+  .tableWrapper {
+    margin: 1.25rem 0;
+  }
+
+  hr {
+    margin: 1.875rem 0;
+  }
+
+  table {
+    overflow: hidden;
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+    margin: 0.625rem 0;
+    border: 1px solid #6d6d6f;
+
+    tr {
+      &:nth-child(2n) {
+        background-color: #1d202a;
+      }
+
+      &:nth-child(2n + 1) {
+        background-color: #090e1b;
+      }
+
+      td {
+        padding: 0.9375rem 0.375rem;
+        border-right: 1px solid #6d6d6f;
+        border-bottom: 1px solid #6d6d6f;
+      }
+
+      .selectedCell {
+        background-color: #353535;
+      }
+    }
+  }
+}
+
+.resize-cursor {
+  td:has(.column-resize-handle) {
+    border-right: 2px solid #1682fd !important;
+    cursor: col-resize;
+  }
+}

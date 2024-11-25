@@ -1,0 +1,61 @@
+.authLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+
+  .line {
+    position: relative;
+    width: 100%;
+    height: 1px;
+    background-color: #7d7d7d;
+
+    &::after {
+      content: "OR";
+      position: absolute;
+      top: -0.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: $background-light-color;
+      padding: 0 0.5rem;
+      color: $white-color;
+    }
+  }
+
+  .children {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    width: 100%;
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
+      align-self: flex-start;
+      width: 100%;
+      margin-bottom: 0.625rem;
+
+      .blue {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $blue-color;
+      }
+
+      .link {
+        display: flex;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+      }
+    }
+
+    .btnBox > .item a {
+      text-decoration: underline;
+
+      &:visited {
+        color: inherit;
+      }
+    }
+  }
+}

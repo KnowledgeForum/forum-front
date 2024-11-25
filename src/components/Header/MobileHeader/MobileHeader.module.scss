@@ -1,0 +1,112 @@
+.header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.625rem 0.9375rem;
+  background-color: $background-light-color;
+  z-index: 99;
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 1.125rem;
+
+    .title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $primary-color;
+    }
+  }
+
+  .rightBox {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+
+    .funcBox {
+      display: flex;
+      gap: 1.25rem;
+
+      .postBtn {
+        @include button($white-color, $primary-color, 0.75rem 1rem);
+
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+}
+
+.menu {
+  position: relative;
+  display: flex !important;
+  flex-direction: column;
+  background-color: $background-light-color;
+  height: 100%;
+
+  .close {
+    position: absolute;
+    top: 1.25rem;
+    right: 0.9375rem;
+    font-size: 1.5rem;
+    color: $gray-color;
+  }
+
+  .linkBox {
+    flex: 6;
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    height: 100%;
+    font-size: 1.375rem;
+
+    a {
+      position: relative;
+      text-decoration: none;
+    }
+
+    .active::after {
+      content: "";
+      position: absolute;
+      bottom: -0.625rem;
+      display: block;
+      width: 100%;
+      height: 0.35rem;
+      background-color: $primary-color;
+    }
+  }
+
+  .bottom {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+
+    .line {
+      width: 2px;
+      height: 1rem;
+      margin: 0 1.5rem;
+      background-color: $gray-color;
+    }
+
+    a,
+    .logoutBtn {
+      color: $gray-color;
+    }
+
+    .logoutBtn {
+      display: flex;
+      height: fit-content;
+      padding: 0.5rem 0;
+    }
+  }
+}
+
+@include mobile {
+  .title {
+    display: none;
+  }
+}

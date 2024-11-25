@@ -1,0 +1,73 @@
+.modal {
+  position: absolute;
+  min-width: 22.5rem;
+  padding: 0.9375rem 1.25rem;
+  border-radius: 0.5rem;
+  background-color: #181f25;
+  box-shadow: 0 0.625rem 1.25rem 0 rgba(0, 0, 0, 0.2);
+  z-index: 999;
+
+  .box {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.9375rem;
+
+    .title {
+      margin-bottom: 0.3125rem;
+      font-size: 14px;
+    }
+
+    & > div > div {
+      width: 20rem;
+      border-radius: 0.1875rem !important;
+      min-width: auto !important;
+    }
+
+    input {
+      padding: 0.625rem !important;
+      color: $white-color;
+      background-color: $background-light-color;
+      border-radius: 0.25rem;
+    }
+  }
+
+  .modalBtnBox {
+    display: flex;
+    justify-content: flex-end;
+
+    button:first-child {
+      margin-right: 0.625rem;
+    }
+
+    .cancelBtn {
+      @include button;
+    }
+
+    .activeBtn {
+      @include button($color: $blue-color);
+    }
+  }
+}
+
+@include tablet-vertical {
+  .modal {
+    right: 0;
+  }
+}
+
+@media (min-width: 660px) and (max-width: $breakpoint-mobile) {
+  .modal {
+    right: 0;
+    padding: 0.625rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    min-width: 0 !important;
+  }
+}
